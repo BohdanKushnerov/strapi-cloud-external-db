@@ -1,0 +1,49 @@
+{
+  "kind": "collectionType",
+  "collectionName": "product_cards",
+  "info": {
+    "singularName": "product-card",
+    "pluralName": "product-cards",
+    "displayName": "product-card",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "subImages": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "price": {
+      "type": "biginteger",
+      "required": true
+    },
+    "card": {
+      "type": "json",
+      "required": false
+    }
+  }
+}
