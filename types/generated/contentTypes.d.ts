@@ -1260,6 +1260,37 @@ export interface ApiSectionHeroCarouselSectionHeroCarousel
   };
 }
 
+export interface ApiTestImageTestImage extends Schema.CollectionType {
+  collectionName: 'test_images';
+  info: {
+    singularName: 'test-image';
+    pluralName: 'test-images';
+    displayName: 'TestImage';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    image: Attribute.Media<'images'>;
+    images: Attribute.Media<'images', true>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::test-image.test-image',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::test-image.test-image',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 declare module '@strapi/types' {
   export module Shared {
     export interface ContentTypes {
@@ -1286,6 +1317,7 @@ declare module '@strapi/types' {
       'api::page-home.page-home': ApiPageHomePageHome;
       'api::product-card.product-card': ApiProductCardProductCard;
       'api::section-hero-carousel.section-hero-carousel': ApiSectionHeroCarouselSectionHeroCarousel;
+      'api::test-image.test-image': ApiTestImageTestImage;
     }
   }
 }
