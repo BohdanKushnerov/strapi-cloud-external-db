@@ -35,11 +35,6 @@
       "type": "string",
       "required": true,
       "maxLength": 3
-    },
-    "page_home": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::page-home.page-home"
     }
   }
 }

@@ -32,7 +32,7 @@
       "target": "api::animal-sub-category.animal-sub-category",
       "mappedBy": "animal_category"
     },
-    "catalog": {
+    "animal": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::catalog.catalog",
