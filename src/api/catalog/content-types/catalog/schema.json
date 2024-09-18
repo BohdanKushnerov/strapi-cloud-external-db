@@ -16,6 +16,12 @@
     }
   },
   "attributes": {
+    "animal_categories": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::animal-category.animal-category",
+      "mappedBy": "animal"
+    },
     "animal": {
       "pluginOptions": {
         "i18n": {
@@ -25,12 +31,6 @@
       "type": "string",
       "required": true,
       "unique": true
-    },
-    "animal_categories": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::animal-category.animal-category",
-      "mappedBy": "catalog"
     }
   }
 }

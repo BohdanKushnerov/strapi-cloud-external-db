@@ -818,7 +818,7 @@ export interface ApiAnimalCategoryAnimalCategory extends Schema.CollectionType {
       'oneToMany',
       'api::animal-sub-category.animal-sub-category'
     >;
-    catalog: Attribute.Relation<
+    animal: Attribute.Relation<
       'api::animal-category.animal-category',
       'manyToOne',
       'api::catalog.catalog'
@@ -927,6 +927,11 @@ export interface ApiCatalogCatalog extends Schema.CollectionType {
     };
   };
   attributes: {
+    animal_categories: Attribute.Relation<
+      'api::catalog.catalog',
+      'oneToMany',
+      'api::animal-category.animal-category'
+    >;
     animal: Attribute.String &
       Attribute.Required &
       Attribute.Unique &
@@ -935,11 +940,6 @@ export interface ApiCatalogCatalog extends Schema.CollectionType {
           localized: true;
         };
       }>;
-    animal_categories: Attribute.Relation<
-      'api::catalog.catalog',
-      'oneToMany',
-      'api::animal-category.animal-category'
-    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1001,11 +1001,6 @@ export interface ApiCountryCountry extends Schema.CollectionType {
       Attribute.SetMinMaxLength<{
         maxLength: 3;
       }>;
-    page_home: Attribute.Relation<
-      'api::country.country',
-      'oneToOne',
-      'api::page-home.page-home'
-    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1025,101 +1020,6 @@ export interface ApiCountryCountry extends Schema.CollectionType {
       'api::country.country',
       'oneToMany',
       'api::country.country'
-    >;
-    locale: Attribute.String;
-  };
-}
-
-export interface ApiHeaderHeader extends Schema.CollectionType {
-  collectionName: 'headers';
-  info: {
-    singularName: 'header';
-    pluralName: 'headers';
-    displayName: 'Header';
-    description: '';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  pluginOptions: {
-    i18n: {
-      localized: true;
-    };
-  };
-  attributes: {
-    JustButton: Attribute.Component<'buttons.button', true> &
-      Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::header.header',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::header.header',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    localizations: Attribute.Relation<
-      'api::header.header',
-      'oneToMany',
-      'api::header.header'
-    >;
-    locale: Attribute.String;
-  };
-}
-
-export interface ApiPageHomePageHome extends Schema.CollectionType {
-  collectionName: 'page_homes';
-  info: {
-    singularName: 'page-home';
-    pluralName: 'page-homes';
-    displayName: 'PageHome';
-    description: '';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  pluginOptions: {
-    i18n: {
-      localized: true;
-    };
-  };
-  attributes: {
-    title: Attribute.String &
-      Attribute.Required &
-      Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::page-home.page-home',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::page-home.page-home',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    localizations: Attribute.Relation<
-      'api::page-home.page-home',
-      'oneToMany',
-      'api::page-home.page-home'
     >;
     locale: Attribute.String;
   };
@@ -1313,8 +1213,6 @@ declare module '@strapi/types' {
       'api::animal-sub-category.animal-sub-category': ApiAnimalSubCategoryAnimalSubCategory;
       'api::catalog.catalog': ApiCatalogCatalog;
       'api::country.country': ApiCountryCountry;
-      'api::header.header': ApiHeaderHeader;
-      'api::page-home.page-home': ApiPageHomePageHome;
       'api::product-card.product-card': ApiProductCardProductCard;
       'api::section-hero-carousel.section-hero-carousel': ApiSectionHeroCarouselSectionHeroCarousel;
       'api::test-image.test-image': ApiTestImageTestImage;
