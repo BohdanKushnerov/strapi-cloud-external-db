@@ -31,6 +31,12 @@
       "type": "string",
       "required": true,
       "unique": true
+    },
+    "brand_for_animal": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::brand-for-animal.brand-for-animal",
+      "mappedBy": "catalog"
     }
   }
 }

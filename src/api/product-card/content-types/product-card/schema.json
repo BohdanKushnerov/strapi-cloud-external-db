@@ -4,7 +4,7 @@
   "info": {
     "singularName": "product-card",
     "pluralName": "product-cards",
-    "displayName": "product-card",
+    "displayName": "ProductCard",
     "description": ""
   },
   "options": {
@@ -26,23 +26,10 @@
         }
       }
     },
-    "image": {
-      "type": "media",
-      "multiple": false,
-      "required": false,
-      "allowedTypes": [
-        "images"
-      ],
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
-    "subImages": {
+    "images": {
       "type": "media",
       "multiple": true,
-      "required": false,
+      "required": true,
       "allowedTypes": [
         "images"
       ],
@@ -61,23 +48,65 @@
         }
       }
     },
-    "price": {
-      "type": "biginteger",
-      "required": true,
+    "brand": {
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
-      }
+      },
+      "type": "enumeration",
+      "enum": [
+        "Royal Canin",
+        "Brit",
+        "Acana"
+      ],
+      "required": true
     },
-    "card": {
-      "type": "json",
-      "required": false,
+    "country": {
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
-      }
+      },
+      "type": "string",
+      "required": true,
+      "unique": false
+    },
+    "promotion": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "promotionQuantity": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "integer",
+      "required": true,
+      "default": 0
+    },
+    "productUrl": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "product_sub_cards": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::product-sub-card.product-sub-card",
+      "mappedBy": "product_card"
     }
   }
 }

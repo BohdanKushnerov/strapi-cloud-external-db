@@ -886,6 +886,11 @@ export interface ApiAnimalSubCategoryAnimalSubCategory
           localized: true;
         };
       }>;
+    brand_for_animal: Attribute.Relation<
+      'api::animal-sub-category.animal-sub-category',
+      'manyToOne',
+      'api::brand-for-animal.brand-for-animal'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -905,6 +910,123 @@ export interface ApiAnimalSubCategoryAnimalSubCategory
       'api::animal-sub-category.animal-sub-category',
       'oneToMany',
       'api::animal-sub-category.animal-sub-category'
+    >;
+    locale: Attribute.String;
+  };
+}
+
+export interface ApiBrandBrand extends Schema.CollectionType {
+  collectionName: 'brands';
+  info: {
+    singularName: 'brand';
+    pluralName: 'brands';
+    displayName: 'Brand';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    brand: Attribute.Enumeration<['Royal Canin', 'Brit', 'Acana']> &
+      Attribute.Required &
+      Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    brand_for_animals: Attribute.Relation<
+      'api::brand.brand',
+      'oneToMany',
+      'api::brand-for-animal.brand-for-animal'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::brand.brand',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::brand.brand',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    localizations: Attribute.Relation<
+      'api::brand.brand',
+      'oneToMany',
+      'api::brand.brand'
+    >;
+    locale: Attribute.String;
+  };
+}
+
+export interface ApiBrandForAnimalBrandForAnimal extends Schema.CollectionType {
+  collectionName: 'brand_for_animals';
+  info: {
+    singularName: 'brand-for-animal';
+    pluralName: 'brand-for-animals';
+    displayName: 'BrandForAnimal';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    animal_sub_categories: Attribute.Relation<
+      'api::brand-for-animal.brand-for-animal',
+      'oneToMany',
+      'api::animal-sub-category.animal-sub-category'
+    >;
+    catalog: Attribute.Relation<
+      'api::brand-for-animal.brand-for-animal',
+      'oneToOne',
+      'api::catalog.catalog'
+    >;
+    brand: Attribute.Relation<
+      'api::brand-for-animal.brand-for-animal',
+      'manyToOne',
+      'api::brand.brand'
+    >;
+    brand_for_animal: Attribute.String &
+      Attribute.Required &
+      Attribute.Unique &
+      Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::brand-for-animal.brand-for-animal',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::brand-for-animal.brand-for-animal',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    localizations: Attribute.Relation<
+      'api::brand-for-animal.brand-for-animal',
+      'oneToMany',
+      'api::brand-for-animal.brand-for-animal'
     >;
     locale: Attribute.String;
   };
@@ -940,6 +1062,11 @@ export interface ApiCatalogCatalog extends Schema.CollectionType {
           localized: true;
         };
       }>;
+    brand_for_animal: Attribute.Relation<
+      'api::catalog.catalog',
+      'oneToOne',
+      'api::brand-for-animal.brand-for-animal'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1030,7 +1157,7 @@ export interface ApiProductCardProductCard extends Schema.CollectionType {
   info: {
     singularName: 'product-card';
     pluralName: 'product-cards';
-    displayName: 'product-card';
+    displayName: 'ProductCard';
     description: '';
   };
   options: {
@@ -1050,13 +1177,8 @@ export interface ApiProductCardProductCard extends Schema.CollectionType {
           localized: true;
         };
       }>;
-    image: Attribute.Media<'images'> &
-      Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    subImages: Attribute.Media<'images', true> &
+    images: Attribute.Media<'images', true> &
+      Attribute.Required &
       Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -1069,19 +1191,49 @@ export interface ApiProductCardProductCard extends Schema.CollectionType {
           localized: true;
         };
       }>;
-    price: Attribute.BigInteger &
+    brand: Attribute.Enumeration<['Royal Canin', 'Brit', 'Acana']> &
       Attribute.Required &
       Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
         };
       }>;
-    card: Attribute.JSON &
+    country: Attribute.String &
+      Attribute.Required &
       Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
         };
       }>;
+    promotion: Attribute.Boolean &
+      Attribute.Required &
+      Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
+      Attribute.DefaultTo<false>;
+    promotionQuantity: Attribute.Integer &
+      Attribute.Required &
+      Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
+      Attribute.DefaultTo<0>;
+    productUrl: Attribute.String &
+      Attribute.Required &
+      Attribute.Unique &
+      Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    product_sub_cards: Attribute.Relation<
+      'api::product-card.product-card',
+      'oneToMany',
+      'api::product-sub-card.product-sub-card'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1101,6 +1253,81 @@ export interface ApiProductCardProductCard extends Schema.CollectionType {
       'api::product-card.product-card',
       'oneToMany',
       'api::product-card.product-card'
+    >;
+    locale: Attribute.String;
+  };
+}
+
+export interface ApiProductSubCardProductSubCard extends Schema.CollectionType {
+  collectionName: 'product_sub_cards';
+  info: {
+    singularName: 'product-sub-card';
+    pluralName: 'product-sub-cards';
+    displayName: 'ProductSubCard';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    product_card: Attribute.Relation<
+      'api::product-sub-card.product-sub-card',
+      'manyToOne',
+      'api::product-card.product-card'
+    >;
+    size: Attribute.String &
+      Attribute.Required &
+      Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    price: Attribute.Integer &
+      Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    label: Attribute.Enumeration<
+      [
+        'inStock',
+        'out of stock',
+        'topSeller',
+        'eco',
+        'markdown',
+        'new',
+        'promotion'
+      ]
+    > &
+      Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::product-sub-card.product-sub-card',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::product-sub-card.product-sub-card',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    localizations: Attribute.Relation<
+      'api::product-sub-card.product-sub-card',
+      'oneToMany',
+      'api::product-sub-card.product-sub-card'
     >;
     locale: Attribute.String;
   };
@@ -1211,9 +1438,12 @@ declare module '@strapi/types' {
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'api::animal-category.animal-category': ApiAnimalCategoryAnimalCategory;
       'api::animal-sub-category.animal-sub-category': ApiAnimalSubCategoryAnimalSubCategory;
+      'api::brand.brand': ApiBrandBrand;
+      'api::brand-for-animal.brand-for-animal': ApiBrandForAnimalBrandForAnimal;
       'api::catalog.catalog': ApiCatalogCatalog;
       'api::country.country': ApiCountryCountry;
       'api::product-card.product-card': ApiProductCardProductCard;
+      'api::product-sub-card.product-sub-card': ApiProductSubCardProductSubCard;
       'api::section-hero-carousel.section-hero-carousel': ApiSectionHeroCarouselSectionHeroCarousel;
       'api::test-image.test-image': ApiTestImageTestImage;
     }
