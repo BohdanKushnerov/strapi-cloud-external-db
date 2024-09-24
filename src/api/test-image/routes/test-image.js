@@ -1,9 +1,7 @@
-'use strict';
-
 /**
  * test-image router
  */
 
-const { createCoreRouter } = require('@strapi/strapi').factories;
+import { factories } from "@strapi/strapi";
 
-module.exports = createCoreRouter('api::test-image.test-image');
+export default factories.createCoreRouter("api::test-image.test-image");

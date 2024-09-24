@@ -1,9 +1,7 @@
-'use strict';
-
 /**
  * test-image service
  */
 
-const { createCoreService } = require('@strapi/strapi').factories;
+import { factories } from "@strapi/strapi";
 
-module.exports = createCoreService('api::test-image.test-image');
+export default factories.createCoreService("api::test-image.test-image");
