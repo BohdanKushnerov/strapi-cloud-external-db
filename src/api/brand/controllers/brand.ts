@@ -2,6 +2,6 @@
  * brand controller
  */
 
-import { factories } from "@strapi/strapi";
+import { factories } from '@strapi/strapi'
 
-export default factories.createCoreController("api::brand.brand");
+export default factories.createCoreController('api::brand.brand');

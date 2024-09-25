@@ -16,17 +16,18 @@
     }
   },
   "attributes": {
-    "animal_sub_categories": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::animal-sub-category.animal-sub-category",
-      "mappedBy": "brand_for_animal"
-    },
-    "catalog": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::catalog.catalog",
-      "inversedBy": "brand_for_animal"
+    "animal": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "enumeration",
+      "enum": [
+        "Собаки",
+        "Коти"
+      ],
+      "required": true
     },
     "brand": {
       "type": "relation",
@@ -34,15 +35,11 @@
       "target": "api::brand.brand",
       "inversedBy": "brand_for_animals"
     },
-    "brand_for_animal": {
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      },
-      "type": "string",
-      "required": true,
-      "unique": true
+    "animal_sub_categories": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::animal-sub-category.animal-sub-category",
+      "mappedBy": "brand_for_animal"
     }
   }
 }

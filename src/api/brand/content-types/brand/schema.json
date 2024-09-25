@@ -4,8 +4,7 @@
   "info": {
     "singularName": "brand",
     "pluralName": "brands",
-    "displayName": "Brand",
-    "description": ""
+    "displayName": "Brand"
   },
   "options": {
     "draftAndPublish": true
@@ -22,13 +21,9 @@
           "localized": true
         }
       },
-      "type": "enumeration",
-      "enum": [
-        "Royal Canin",
-        "Brit",
-        "Acana"
-      ],
-      "required": true
+      "type": "string",
+      "required": true,
+      "unique": true
     },
     "brand_for_animals": {
       "type": "relation",

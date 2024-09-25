@@ -573,6 +573,10 @@ export interface ApiAnimalSubCategoryAnimalSubCategory
       'manyToOne',
       'api::brand-for-animal.brand-for-animal'
     >;
+    product_card: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::product-card.product-card'
+    >;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -594,7 +598,6 @@ export interface ApiBrandBrand extends Struct.CollectionTypeSchema {
     singularName: 'brand';
     pluralName: 'brands';
     displayName: 'Brand';
-    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -605,8 +608,9 @@ export interface ApiBrandBrand extends Struct.CollectionTypeSchema {
     };
   };
   attributes: {
-    brand: Schema.Attribute.Enumeration<['Royal Canin', 'Brit', 'Acana']> &
+    brand: Schema.Attribute.String &
       Schema.Attribute.Required &
+      Schema.Attribute.Unique &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -646,20 +650,20 @@ export interface ApiBrandForAnimalBrandForAnimal
     };
   };
   attributes: {
-    animal_sub_categories: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::animal-sub-category.animal-sub-category'
-    >;
-    catalog: Schema.Attribute.Relation<'oneToOne', 'api::catalog.catalog'>;
-    brand: Schema.Attribute.Relation<'manyToOne', 'api::brand.brand'>;
-    brand_for_animal: Schema.Attribute.String &
+    animal: Schema.Attribute.Enumeration<
+      ['\u0421\u043E\u0431\u0430\u043A\u0438', '\u041A\u043E\u0442\u0438']
+    > &
       Schema.Attribute.Required &
-      Schema.Attribute.Unique &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
         };
       }>;
+    brand: Schema.Attribute.Relation<'manyToOne', 'api::brand.brand'>;
+    animal_sub_categories: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::animal-sub-category.animal-sub-category'
+    >;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -704,10 +708,6 @@ export interface ApiCatalogCatalog extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
-    brand_for_animal: Schema.Attribute.Relation<
-      'oneToOne',
-      'api::brand-for-animal.brand-for-animal'
-    >;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -856,6 +856,26 @@ export interface ApiProductCardProductCard extends Struct.CollectionTypeSchema {
       'oneToMany',
       'api::product-sub-card.product-sub-card'
     >;
+    eco: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<false>;
+    topSeller: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<false>;
+    animal_sub_category: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::animal-sub-category.animal-sub-category'
+    >;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -900,28 +920,44 @@ export interface ApiProductSubCardProductSubCard
           localized: true;
         };
       }>;
-    price: Schema.Attribute.Integer &
+    oldPrice: Schema.Attribute.Integer &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
         };
       }>;
-    label: Schema.Attribute.Enumeration<
-      [
-        'inStock',
-        'out of stock',
-        'topSeller',
-        'eco',
-        'markdown',
-        'new',
-        'promotion',
-      ]
-    > &
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
         };
       }>;
+    inStock: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<false>;
+    markdown: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<false>;
+    newPrice: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<0>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;

@@ -31,7 +31,7 @@
       "type": "string",
       "required": true
     },
-    "price": {
+    "oldPrice": {
       "pluginOptions": {
         "i18n": {
           "localized": true
@@ -39,23 +39,45 @@
       },
       "type": "integer"
     },
-    "label": {
+    "title": {
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       },
-      "type": "enumeration",
-      "enum": [
-        "inStock",
-        "out of stock",
-        "topSeller",
-        "eco",
-        "markdown",
-        "new",
-        "promotion"
-      ],
-      "required": false
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "inStock": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "markdown": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "newPrice": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "integer",
+      "default": 0,
+      "required": true
     }
   }
 }
