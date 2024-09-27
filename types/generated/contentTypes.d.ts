@@ -573,8 +573,8 @@ export interface ApiAnimalSubCategoryAnimalSubCategory
       'manyToOne',
       'api::brand-for-animal.brand-for-animal'
     >;
-    product_card: Schema.Attribute.Relation<
-      'oneToOne',
+    product_cards: Schema.Attribute.Relation<
+      'oneToMany',
       'api::product-card.product-card'
     >;
     createdAt: Schema.Attribute.DateTime;
@@ -873,7 +873,7 @@ export interface ApiProductCardProductCard extends Struct.CollectionTypeSchema {
       }> &
       Schema.Attribute.DefaultTo<false>;
     animal_sub_category: Schema.Attribute.Relation<
-      'oneToOne',
+      'manyToOne',
       'api::animal-sub-category.animal-sub-category'
     >;
     createdAt: Schema.Attribute.DateTime;
@@ -920,7 +920,7 @@ export interface ApiProductSubCardProductSubCard
           localized: true;
         };
       }>;
-    oldPrice: Schema.Attribute.Integer &
+    price: Schema.Attribute.Integer &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;

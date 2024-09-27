@@ -130,9 +130,9 @@
     },
     "animal_sub_category": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "manyToOne",
       "target": "api::animal-sub-category.animal-sub-category",
-      "inversedBy": "product_card"
+      "inversedBy": "product_cards"
     }
   }
 }

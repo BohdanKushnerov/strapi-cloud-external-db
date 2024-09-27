@@ -31,7 +31,7 @@
       "type": "string",
       "required": true
     },
-    "oldPrice": {
+    "price": {
       "pluginOptions": {
         "i18n": {
           "localized": true
