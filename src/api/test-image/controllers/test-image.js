@@ -1,9 +1,7 @@
-'use strict';
-
 /**
  * test-image controller
  */
 
-const { createCoreController } = require('@strapi/strapi').factories;
+import { factories } from "@strapi/strapi";
 
-module.exports = createCoreController('api::test-image.test-image');
+export default factories.createCoreController("api::test-image.test-image");

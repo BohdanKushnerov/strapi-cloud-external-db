@@ -1,37 +1,39 @@
 {
   "name": "zoo-shop-cms",
-  "private": true,
   "version": "0.1.0",
+  "private": true,
   "description": "A Strapi application",
   "scripts": {
-    "dev": "strapi develop",
-    "start": "strapi start",
     "build": "strapi build",
-    "strapi": "strapi",
-    "deploy": "strapi deploy"
+    "deploy": "strapi deploy",
+    "develop": "strapi develop",
+    "start": "strapi start",
+    "strapi": "strapi"
   },
   "dependencies": {
-    "@strapi/plugin-cloud": "4.25.10",
-    "@strapi/plugin-graphql": "^4.25.10",
-    "@strapi/plugin-i18n": "4.25.10",
-    "@strapi/plugin-users-permissions": "4.25.10",
-    "@strapi/provider-upload-cloudinary": "^4.25.11",
-    "@strapi/strapi": "4.25.10",
-    "pg": "^8.12.0",
+    "@strapi/email": "^5.0.0",
+    "@strapi/plugin-cloud": "5.0.0",
+    "@strapi/plugin-graphql": "^5.0.0",
+    "@strapi/plugin-users-permissions": "5.0.0",
+    "@strapi/provider-upload-cloudinary": "^5.0.0",
+    "@strapi/strapi": "5.0.0",
+    "pg": "8.8.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "react-router-dom": "5.3.4",
-    "styled-components": "5.3.3"
+    "react-router-dom": "^6.0.0",
+    "styled-components": "^6.0.0"
   },
-  "author": {
-    "name": "A Strapi developer"
-  },
-  "strapi": {
-    "uuid": "0130279e-74f8-4442-a18e-15df1cfcc26e"
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "typescript": "^5"
   },
   "engines": {
     "node": ">=18.0.0 <=20.x.x",
     "npm": ">=6.0.0"
   },
-  "license": "MIT"
+  "strapi": {
+    "uuid": "2b084f8b-96db-4f99-8af7-b90cc6241904"
+  }
 }

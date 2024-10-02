@@ -4,7 +4,7 @@
   "info": {
     "singularName": "product-card",
     "pluralName": "product-cards",
-    "displayName": "product-card",
+    "displayName": "ProductCard",
     "description": ""
   },
   "options": {
@@ -26,23 +26,10 @@
         }
       }
     },
-    "image": {
-      "type": "media",
-      "multiple": false,
-      "required": false,
-      "allowedTypes": [
-        "images"
-      ],
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
-    "subImages": {
+    "images": {
       "type": "media",
       "multiple": true,
-      "required": false,
+      "required": true,
       "allowedTypes": [
         "images"
       ],
@@ -52,32 +39,152 @@
         }
       }
     },
+    "brand": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "enumeration",
+      "enum": [
+        "Royal Canin",
+        "Brit",
+        "Acana"
+      ],
+      "required": true
+    },
+    "country": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "string",
+      "required": true,
+      "unique": false
+    },
+    "promotion": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "promotionQuantity": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "integer",
+      "required": true,
+      "default": 0
+    },
+    "productUrl": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "product_sub_cards": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::product-sub-card.product-sub-card",
+      "mappedBy": "product_card"
+    },
+    "eco": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "topSeller": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "animal_sub_category": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::animal-sub-category.animal-sub-category",
+      "inversedBy": "product_cards"
+    },
     "description": {
-      "type": "text",
-      "required": true,
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
-      }
+      },
+      "type": "json"
     },
-    "price": {
-      "type": "biginteger",
-      "required": true,
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
+    "brand_for_animal": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::brand-for-animal.brand-for-animal",
+      "inversedBy": "product_card"
     },
-    "card": {
-      "type": "json",
-      "required": false,
+    "classOfFood": {
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
-      }
+      },
+      "type": "enumeration",
+      "enum": [
+        "Преміум",
+        "Супер преміум",
+        "Холістик"
+      ],
+      "required": false
+    },
+    "ageOfAnimal": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "enumeration",
+      "enum": [
+        "Стартер (щенята)",
+        "Цуценята та юніори",
+        "Дорослі собаки",
+        "Старіючі собаки",
+        "Кошеня (до 12 міс)",
+        "Доросла кішка",
+        "Старіюча кішка"
+      ],
+      "required": false
+    },
+    "breedSize": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "enumeration",
+      "enum": [
+        "Міні породи (до 5 кг)",
+        "Дрібні породи (5-10 кг)",
+        "Середні породи (10-25 кг)",
+        "Великі породи (25-45 кг)",
+        "Гігантські породи (більше 45 кг)"
+      ]
     }
   }
 }

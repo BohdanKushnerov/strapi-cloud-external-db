@@ -41,6 +41,18 @@
       "type": "string",
       "required": true,
       "unique": true
+    },
+    "brand_for_animal": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::brand-for-animal.brand-for-animal",
+      "inversedBy": "animal_sub_categories"
+    },
+    "product_cards": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::product-card.product-card",
+      "mappedBy": "animal_sub_category"
     }
   }
 }
