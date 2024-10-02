@@ -650,8 +650,11 @@ export interface ApiBrandForAnimalBrandForAnimal
     };
   };
   attributes: {
-    animal: Schema.Attribute.Enumeration<
-      ['\u0421\u043E\u0431\u0430\u043A\u0438', '\u041A\u043E\u0442\u0438']
+    forAnimal: Schema.Attribute.Enumeration<
+      [
+        '\u0414\u043B\u044F \u0441\u043E\u0431\u0430\u043A',
+        '\u0414\u043B\u044F \u043A\u043E\u0442\u0456\u0432',
+      ]
     > &
       Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{
@@ -663,6 +666,10 @@ export interface ApiBrandForAnimalBrandForAnimal
     animal_sub_categories: Schema.Attribute.Relation<
       'oneToMany',
       'api::animal-sub-category.animal-sub-category'
+    >;
+    product_card: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::product-card.product-card'
     >;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
@@ -807,13 +814,6 @@ export interface ApiProductCardProductCard extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
-    description: Schema.Attribute.Text &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
     brand: Schema.Attribute.Enumeration<['Royal Canin', 'Brit', 'Acana']> &
       Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{
@@ -876,6 +876,58 @@ export interface ApiProductCardProductCard extends Struct.CollectionTypeSchema {
       'manyToOne',
       'api::animal-sub-category.animal-sub-category'
     >;
+    description: Schema.Attribute.JSON &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    brand_for_animal: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::brand-for-animal.brand-for-animal'
+    >;
+    classOfFood: Schema.Attribute.Enumeration<
+      [
+        '\u041F\u0440\u0435\u043C\u0456\u0443\u043C',
+        '\u0421\u0443\u043F\u0435\u0440 \u043F\u0440\u0435\u043C\u0456\u0443\u043C',
+        '\u0425\u043E\u043B\u0456\u0441\u0442\u0438\u043A',
+      ]
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    ageOfAnimal: Schema.Attribute.Enumeration<
+      [
+        '\u0421\u0442\u0430\u0440\u0442\u0435\u0440 (\u0449\u0435\u043D\u044F\u0442\u0430)',
+        '\u0426\u0443\u0446\u0435\u043D\u044F\u0442\u0430 \u0442\u0430 \u044E\u043D\u0456\u043E\u0440\u0438',
+        '\u0414\u043E\u0440\u043E\u0441\u043B\u0456 \u0441\u043E\u0431\u0430\u043A\u0438',
+        '\u0421\u0442\u0430\u0440\u0456\u044E\u0447\u0456 \u0441\u043E\u0431\u0430\u043A\u0438',
+        '\u041A\u043E\u0448\u0435\u043D\u044F (\u0434\u043E 12 \u043C\u0456\u0441)',
+        '\u0414\u043E\u0440\u043E\u0441\u043B\u0430 \u043A\u0456\u0448\u043A\u0430',
+        '\u0421\u0442\u0430\u0440\u0456\u044E\u0447\u0430 \u043A\u0456\u0448\u043A\u0430',
+      ]
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    breedSize: Schema.Attribute.Enumeration<
+      [
+        '\u041C\u0456\u043D\u0456 \u043F\u043E\u0440\u043E\u0434\u0438 (\u0434\u043E 5 \u043A\u0433)',
+        '\u0414\u0440\u0456\u0431\u043D\u0456 \u043F\u043E\u0440\u043E\u0434\u0438 (5-10 \u043A\u0433)',
+        '\u0421\u0435\u0440\u0435\u0434\u043D\u0456 \u043F\u043E\u0440\u043E\u0434\u0438 (10-25 \u043A\u0433)',
+        '\u0412\u0435\u043B\u0438\u043A\u0456 \u043F\u043E\u0440\u043E\u0434\u0438 (25-45 \u043A\u0433)',
+        '\u0413\u0456\u0433\u0430\u043D\u0442\u0441\u044C\u043A\u0456 \u043F\u043E\u0440\u043E\u0434\u0438 (\u0431\u0456\u043B\u044C\u0448\u0435 45 \u043A\u0433)',
+      ]
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;

@@ -16,7 +16,7 @@
     }
   },
   "attributes": {
-    "animal": {
+    "forAnimal": {
       "pluginOptions": {
         "i18n": {
           "localized": true
@@ -24,8 +24,8 @@
       },
       "type": "enumeration",
       "enum": [
-        "Собаки",
-        "Коти"
+        "Для собак",
+        "Для котів"
       ],
       "required": true
     },
@@ -39,6 +39,12 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::animal-sub-category.animal-sub-category",
+      "mappedBy": "brand_for_animal"
+    },
+    "product_card": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::product-card.product-card",
       "mappedBy": "brand_for_animal"
     }
   }
