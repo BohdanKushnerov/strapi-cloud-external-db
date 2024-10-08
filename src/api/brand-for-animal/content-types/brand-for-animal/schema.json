@@ -41,9 +41,9 @@
       "target": "api::animal-sub-category.animal-sub-category",
       "mappedBy": "brand_for_animal"
     },
-    "product_card": {
+    "product_cards": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "oneToMany",
       "target": "api::product-card.product-card",
       "mappedBy": "brand_for_animal"
     }

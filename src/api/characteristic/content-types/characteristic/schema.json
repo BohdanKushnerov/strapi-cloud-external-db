@@ -1,0 +1,101 @@
+{
+  "kind": "collectionType",
+  "collectionName": "characteristics",
+  "info": {
+    "singularName": "characteristic",
+    "pluralName": "characteristics",
+    "displayName": "Characteristic",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "product_card": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::product-card.product-card",
+      "mappedBy": "characteristic"
+    },
+    "titleOfProductCard": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "string",
+      "unique": true
+    },
+    "class_of_feed": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::class-of-feed.class-of-feed",
+      "inversedBy": "characteristics"
+    },
+    "form_of_feed_release": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::form-of-feed-release.form-of-feed-release",
+      "inversedBy": "characteristics"
+    },
+    "age_of_dogs": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::age-of-dog.age-of-dog",
+      "mappedBy": "characteristics"
+    },
+    "breed_of_dogs": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::breed-of-dog.breed-of-dog",
+      "mappedBy": "characteristics"
+    },
+    "breed_sizes": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::breed-size.breed-size",
+      "mappedBy": "characteristics"
+    },
+    "source_of_protein_in_feeds": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::source-of-protein-in-feed.source-of-protein-in-feed",
+      "mappedBy": "characteristics"
+    },
+    "special_dietary_needs": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::special-dietary-need.special-dietary-need",
+      "mappedBy": "characteristics"
+    },
+    "types_of_packaging": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::types-of-packaging.types-of-packaging",
+      "inversedBy": "characteristics"
+    },
+    "appointment_of_veterinary_diets": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::appointment-of-veterinary-diet.appointment-of-veterinary-diet",
+      "mappedBy": "characteristics"
+    },
+    "kind_of_treat": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::kind-of-treat.kind-of-treat",
+      "inversedBy": "characteristics"
+    },
+    "type_of_canned_food": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::type-of-canned-food.type-of-canned-food",
+      "inversedBy": "characteristics"
+    }
+  }
+}

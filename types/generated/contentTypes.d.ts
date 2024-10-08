@@ -485,6 +485,49 @@ export interface PluginUsersPermissionsUser
   };
 }
 
+export interface ApiAgeOfDogAgeOfDog extends Struct.CollectionTypeSchema {
+  collectionName: 'age_of_dogs';
+  info: {
+    singularName: 'age-of-dog';
+    pluralName: 'age-of-dogs';
+    displayName: 'AgeOfDog';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    value: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    characteristics: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::characteristic.characteristic'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::age-of-dog.age-of-dog'
+    >;
+  };
+}
+
 export interface ApiAnimalCategoryAnimalCategory
   extends Struct.CollectionTypeSchema {
   collectionName: 'animal_categories';
@@ -592,6 +635,49 @@ export interface ApiAnimalSubCategoryAnimalSubCategory
   };
 }
 
+export interface ApiAppointmentOfVeterinaryDietAppointmentOfVeterinaryDiet
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'appointment_of_veterinary_diets';
+  info: {
+    singularName: 'appointment-of-veterinary-diet';
+    pluralName: 'appointment-of-veterinary-diets';
+    displayName: 'AppointmentOfVeterinaryDiet';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    value: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    characteristics: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::characteristic.characteristic'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::appointment-of-veterinary-diet.appointment-of-veterinary-diet'
+    >;
+  };
+}
+
 export interface ApiBrandBrand extends Struct.CollectionTypeSchema {
   collectionName: 'brands';
   info: {
@@ -667,8 +753,8 @@ export interface ApiBrandForAnimalBrandForAnimal
       'oneToMany',
       'api::animal-sub-category.animal-sub-category'
     >;
-    product_card: Schema.Attribute.Relation<
-      'oneToOne',
+    product_cards: Schema.Attribute.Relation<
+      'oneToMany',
       'api::product-card.product-card'
     >;
     createdAt: Schema.Attribute.DateTime;
@@ -682,6 +768,92 @@ export interface ApiBrandForAnimalBrandForAnimal
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::brand-for-animal.brand-for-animal'
+    >;
+  };
+}
+
+export interface ApiBreedOfDogBreedOfDog extends Struct.CollectionTypeSchema {
+  collectionName: 'breed_of_dogs';
+  info: {
+    singularName: 'breed-of-dog';
+    pluralName: 'breed-of-dogs';
+    displayName: 'BreedOfDog';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    value: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    characteristics: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::characteristic.characteristic'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::breed-of-dog.breed-of-dog'
+    >;
+  };
+}
+
+export interface ApiBreedSizeBreedSize extends Struct.CollectionTypeSchema {
+  collectionName: 'breed_sizes';
+  info: {
+    singularName: 'breed-size';
+    pluralName: 'breed-sizes';
+    displayName: 'BreedSize';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    value: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    characteristics: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::characteristic.characteristic'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::breed-size.breed-size'
     >;
   };
 }
@@ -726,6 +898,137 @@ export interface ApiCatalogCatalog extends Struct.CollectionTypeSchema {
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::catalog.catalog'
+    >;
+  };
+}
+
+export interface ApiCharacteristicCharacteristic
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'characteristics';
+  info: {
+    singularName: 'characteristic';
+    pluralName: 'characteristics';
+    displayName: 'Characteristic';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    product_card: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::product-card.product-card'
+    >;
+    titleOfProductCard: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    class_of_feed: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::class-of-feed.class-of-feed'
+    >;
+    form_of_feed_release: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::form-of-feed-release.form-of-feed-release'
+    >;
+    age_of_dogs: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::age-of-dog.age-of-dog'
+    >;
+    breed_of_dogs: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::breed-of-dog.breed-of-dog'
+    >;
+    breed_sizes: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::breed-size.breed-size'
+    >;
+    source_of_protein_in_feeds: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::source-of-protein-in-feed.source-of-protein-in-feed'
+    >;
+    special_dietary_needs: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::special-dietary-need.special-dietary-need'
+    >;
+    types_of_packaging: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::types-of-packaging.types-of-packaging'
+    >;
+    appointment_of_veterinary_diets: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::appointment-of-veterinary-diet.appointment-of-veterinary-diet'
+    >;
+    kind_of_treat: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::kind-of-treat.kind-of-treat'
+    >;
+    type_of_canned_food: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::type-of-canned-food.type-of-canned-food'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::characteristic.characteristic'
+    >;
+  };
+}
+
+export interface ApiClassOfFeedClassOfFeed extends Struct.CollectionTypeSchema {
+  collectionName: 'class_of_feeds';
+  info: {
+    singularName: 'class-of-feed';
+    pluralName: 'class-of-feeds';
+    displayName: 'ClassOfFeed';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    value: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    characteristics: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::characteristic.characteristic'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::class-of-feed.class-of-feed'
     >;
   };
 }
@@ -778,6 +1081,91 @@ export interface ApiCountryCountry extends Struct.CollectionTypeSchema {
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::country.country'
+    >;
+  };
+}
+
+export interface ApiFormOfFeedReleaseFormOfFeedRelease
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'form_of_feed_releases';
+  info: {
+    singularName: 'form-of-feed-release';
+    pluralName: 'form-of-feed-releases';
+    displayName: 'FormOfFeedRelease';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    value: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    characteristics: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::characteristic.characteristic'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::form-of-feed-release.form-of-feed-release'
+    >;
+  };
+}
+
+export interface ApiKindOfTreatKindOfTreat extends Struct.CollectionTypeSchema {
+  collectionName: 'kind_of_treats';
+  info: {
+    singularName: 'kind-of-treat';
+    pluralName: 'kind-of-treats';
+    displayName: 'KindOfTreat';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    value: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    characteristics: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::characteristic.characteristic'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::kind-of-treat.kind-of-treat'
     >;
   };
 }
@@ -882,52 +1270,14 @@ export interface ApiProductCardProductCard extends Struct.CollectionTypeSchema {
           localized: true;
         };
       }>;
-    brand_for_animal: Schema.Attribute.Relation<
+    characteristic: Schema.Attribute.Relation<
       'oneToOne',
+      'api::characteristic.characteristic'
+    >;
+    brand_for_animal: Schema.Attribute.Relation<
+      'manyToOne',
       'api::brand-for-animal.brand-for-animal'
     >;
-    classOfFood: Schema.Attribute.Enumeration<
-      [
-        '\u041F\u0440\u0435\u043C\u0456\u0443\u043C',
-        '\u0421\u0443\u043F\u0435\u0440 \u043F\u0440\u0435\u043C\u0456\u0443\u043C',
-        '\u0425\u043E\u043B\u0456\u0441\u0442\u0438\u043A',
-      ]
-    > &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    ageOfAnimal: Schema.Attribute.Enumeration<
-      [
-        '\u0421\u0442\u0430\u0440\u0442\u0435\u0440 (\u0449\u0435\u043D\u044F\u0442\u0430)',
-        '\u0426\u0443\u0446\u0435\u043D\u044F\u0442\u0430 \u0442\u0430 \u044E\u043D\u0456\u043E\u0440\u0438',
-        '\u0414\u043E\u0440\u043E\u0441\u043B\u0456 \u0441\u043E\u0431\u0430\u043A\u0438',
-        '\u0421\u0442\u0430\u0440\u0456\u044E\u0447\u0456 \u0441\u043E\u0431\u0430\u043A\u0438',
-        '\u041A\u043E\u0448\u0435\u043D\u044F (\u0434\u043E 12 \u043C\u0456\u0441)',
-        '\u0414\u043E\u0440\u043E\u0441\u043B\u0430 \u043A\u0456\u0448\u043A\u0430',
-        '\u0421\u0442\u0430\u0440\u0456\u044E\u0447\u0430 \u043A\u0456\u0448\u043A\u0430',
-      ]
-    > &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    breedSize: Schema.Attribute.Enumeration<
-      [
-        '\u041C\u0456\u043D\u0456 \u043F\u043E\u0440\u043E\u0434\u0438 (\u0434\u043E 5 \u043A\u0433)',
-        '\u0414\u0440\u0456\u0431\u043D\u0456 \u043F\u043E\u0440\u043E\u0434\u0438 (5-10 \u043A\u0433)',
-        '\u0421\u0435\u0440\u0435\u0434\u043D\u0456 \u043F\u043E\u0440\u043E\u0434\u0438 (10-25 \u043A\u0433)',
-        '\u0412\u0435\u043B\u0438\u043A\u0456 \u043F\u043E\u0440\u043E\u0434\u0438 (25-45 \u043A\u0433)',
-        '\u0413\u0456\u0433\u0430\u043D\u0442\u0441\u044C\u043A\u0456 \u043F\u043E\u0440\u043E\u0434\u0438 (\u0431\u0456\u043B\u044C\u0448\u0435 45 \u043A\u0433)',
-      ]
-    > &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -1073,16 +1423,17 @@ export interface ApiSectionHeroCarouselSectionHeroCarousel
   };
 }
 
-export interface ApiTestColTestCol extends Struct.CollectionTypeSchema {
-  collectionName: 'test_cols';
+export interface ApiSourceOfProteinInFeedSourceOfProteinInFeed
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'source_of_protein_in_feeds';
   info: {
-    singularName: 'test-col';
-    pluralName: 'test-cols';
-    displayName: 'test-col';
+    singularName: 'source-of-protein-in-feed';
+    pluralName: 'source-of-protein-in-feeds';
+    displayName: 'SourceOfProteinInFeed';
     description: '';
   };
   options: {
-    draftAndPublish: false;
+    draftAndPublish: true;
   };
   pluginOptions: {
     i18n: {
@@ -1090,14 +1441,17 @@ export interface ApiTestColTestCol extends Struct.CollectionTypeSchema {
     };
   };
   attributes: {
-    title: Schema.Attribute.String &
-      Schema.Attribute.Required &
+    value: Schema.Attribute.String &
       Schema.Attribute.Unique &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
         };
       }>;
+    characteristics: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::characteristic.characteristic'
+    >;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -1108,24 +1462,40 @@ export interface ApiTestColTestCol extends Struct.CollectionTypeSchema {
     locale: Schema.Attribute.String;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
-      'api::test-col.test-col'
+      'api::source-of-protein-in-feed.source-of-protein-in-feed'
     >;
   };
 }
 
-export interface ApiTestImageTestImage extends Struct.CollectionTypeSchema {
-  collectionName: 'test_images';
+export interface ApiSpecialDietaryNeedSpecialDietaryNeed
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'special_dietary_needs';
   info: {
-    singularName: 'test-image';
-    pluralName: 'test-images';
-    displayName: 'TestImage';
+    singularName: 'special-dietary-need';
+    pluralName: 'special-dietary-needs';
+    displayName: 'SpecialDietaryNeed';
+    description: '';
   };
   options: {
     draftAndPublish: true;
   };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
   attributes: {
-    image: Schema.Attribute.Media<'images'>;
-    images: Schema.Attribute.Media<'images', true>;
+    value: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    characteristics: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::characteristic.characteristic'
+    >;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -1136,7 +1506,93 @@ export interface ApiTestImageTestImage extends Struct.CollectionTypeSchema {
     locale: Schema.Attribute.String;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
-      'api::test-image.test-image'
+      'api::special-dietary-need.special-dietary-need'
+    >;
+  };
+}
+
+export interface ApiTypeOfCannedFoodTypeOfCannedFood
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'type_of_canned_foods';
+  info: {
+    singularName: 'type-of-canned-food';
+    pluralName: 'type-of-canned-foods';
+    displayName: 'TypeOfCannedFood';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    value: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    characteristics: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::characteristic.characteristic'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::type-of-canned-food.type-of-canned-food'
+    >;
+  };
+}
+
+export interface ApiTypesOfPackagingTypesOfPackaging
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'types_of_packagings';
+  info: {
+    singularName: 'types-of-packaging';
+    pluralName: 'types-of-packagings';
+    displayName: 'TypesOfPackaging';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    value: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    characteristics: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::characteristic.characteristic'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::types-of-packaging.types-of-packaging'
     >;
   };
 }
@@ -1516,17 +1972,27 @@ declare module '@strapi/strapi' {
       'plugin::users-permissions.permission': PluginUsersPermissionsPermission;
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
+      'api::age-of-dog.age-of-dog': ApiAgeOfDogAgeOfDog;
       'api::animal-category.animal-category': ApiAnimalCategoryAnimalCategory;
       'api::animal-sub-category.animal-sub-category': ApiAnimalSubCategoryAnimalSubCategory;
+      'api::appointment-of-veterinary-diet.appointment-of-veterinary-diet': ApiAppointmentOfVeterinaryDietAppointmentOfVeterinaryDiet;
       'api::brand.brand': ApiBrandBrand;
       'api::brand-for-animal.brand-for-animal': ApiBrandForAnimalBrandForAnimal;
+      'api::breed-of-dog.breed-of-dog': ApiBreedOfDogBreedOfDog;
+      'api::breed-size.breed-size': ApiBreedSizeBreedSize;
       'api::catalog.catalog': ApiCatalogCatalog;
+      'api::characteristic.characteristic': ApiCharacteristicCharacteristic;
+      'api::class-of-feed.class-of-feed': ApiClassOfFeedClassOfFeed;
       'api::country.country': ApiCountryCountry;
+      'api::form-of-feed-release.form-of-feed-release': ApiFormOfFeedReleaseFormOfFeedRelease;
+      'api::kind-of-treat.kind-of-treat': ApiKindOfTreatKindOfTreat;
       'api::product-card.product-card': ApiProductCardProductCard;
       'api::product-sub-card.product-sub-card': ApiProductSubCardProductSubCard;
       'api::section-hero-carousel.section-hero-carousel': ApiSectionHeroCarouselSectionHeroCarousel;
-      'api::test-col.test-col': ApiTestColTestCol;
-      'api::test-image.test-image': ApiTestImageTestImage;
+      'api::source-of-protein-in-feed.source-of-protein-in-feed': ApiSourceOfProteinInFeedSourceOfProteinInFeed;
+      'api::special-dietary-need.special-dietary-need': ApiSpecialDietaryNeedSpecialDietaryNeed;
+      'api::type-of-canned-food.type-of-canned-food': ApiTypeOfCannedFoodTypeOfCannedFood;
+      'api::types-of-packaging.types-of-packaging': ApiTypesOfPackagingTypesOfPackaging;
       'admin::permission': AdminPermission;
       'admin::user': AdminUser;
       'admin::role': AdminRole;
