@@ -29,6 +29,15 @@
       "relation": "oneToMany",
       "target": "api::characteristic.characteristic",
       "mappedBy": "form_of_feed_release"
+    },
+    "title": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "string",
+      "unique": true
     }
   }
 }

@@ -513,6 +513,13 @@ export interface ApiAgeOfDogAgeOfDog extends Struct.CollectionTypeSchema {
       'manyToMany',
       'api::characteristic.characteristic'
     >;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -642,6 +649,7 @@ export interface ApiAppointmentOfVeterinaryDietAppointmentOfVeterinaryDiet
     singularName: 'appointment-of-veterinary-diet';
     pluralName: 'appointment-of-veterinary-diets';
     displayName: 'AppointmentOfVeterinaryDiet';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -663,6 +671,13 @@ export interface ApiAppointmentOfVeterinaryDietAppointmentOfVeterinaryDiet
       'manyToMany',
       'api::characteristic.characteristic'
     >;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -684,6 +699,7 @@ export interface ApiBrandBrand extends Struct.CollectionTypeSchema {
     singularName: 'brand';
     pluralName: 'brands';
     displayName: 'Brand';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -694,7 +710,7 @@ export interface ApiBrandBrand extends Struct.CollectionTypeSchema {
     };
   };
   attributes: {
-    brand: Schema.Attribute.String &
+    title: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.Unique &
       Schema.Attribute.SetPluginOptions<{
@@ -706,6 +722,17 @@ export interface ApiBrandBrand extends Struct.CollectionTypeSchema {
       'oneToMany',
       'api::brand-for-animal.brand-for-animal'
     >;
+    product_cards: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::product-card.product-card'
+    >;
+    value: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -800,6 +827,13 @@ export interface ApiBreedOfDogBreedOfDog extends Struct.CollectionTypeSchema {
       'manyToMany',
       'api::characteristic.characteristic'
     >;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -843,6 +877,13 @@ export interface ApiBreedSizeBreedSize extends Struct.CollectionTypeSchema {
       'manyToMany',
       'api::characteristic.characteristic'
     >;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -1018,6 +1059,13 @@ export interface ApiClassOfFeedClassOfFeed extends Struct.CollectionTypeSchema {
       'oneToMany',
       'api::characteristic.characteristic'
     >;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -1113,6 +1161,13 @@ export interface ApiFormOfFeedReleaseFormOfFeedRelease
       'oneToMany',
       'api::characteristic.characteristic'
     >;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -1134,6 +1189,7 @@ export interface ApiKindOfTreatKindOfTreat extends Struct.CollectionTypeSchema {
     singularName: 'kind-of-treat';
     pluralName: 'kind-of-treats';
     displayName: 'KindOfTreat';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -1155,6 +1211,13 @@ export interface ApiKindOfTreatKindOfTreat extends Struct.CollectionTypeSchema {
       'oneToMany',
       'api::characteristic.characteristic'
     >;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -1196,13 +1259,6 @@ export interface ApiProductCardProductCard extends Struct.CollectionTypeSchema {
         };
       }>;
     images: Schema.Attribute.Media<'images', true> &
-      Schema.Attribute.Required &
-      Schema.Attribute.SetPluginOptions<{
-        i18n: {
-          localized: true;
-        };
-      }>;
-    brand: Schema.Attribute.Enumeration<['Royal Canin', 'Brit', 'Acana']> &
       Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -1278,6 +1334,7 @@ export interface ApiProductCardProductCard extends Struct.CollectionTypeSchema {
       'manyToOne',
       'api::brand-for-animal.brand-for-animal'
     >;
+    brand: Schema.Attribute.Relation<'manyToOne', 'api::brand.brand'>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -1452,6 +1509,13 @@ export interface ApiSourceOfProteinInFeedSourceOfProteinInFeed
       'manyToMany',
       'api::characteristic.characteristic'
     >;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -1496,6 +1560,13 @@ export interface ApiSpecialDietaryNeedSpecialDietaryNeed
       'manyToMany',
       'api::characteristic.characteristic'
     >;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -1518,6 +1589,7 @@ export interface ApiTypeOfCannedFoodTypeOfCannedFood
     singularName: 'type-of-canned-food';
     pluralName: 'type-of-canned-foods';
     displayName: 'TypeOfCannedFood';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -1539,6 +1611,13 @@ export interface ApiTypeOfCannedFoodTypeOfCannedFood
       'oneToMany',
       'api::characteristic.characteristic'
     >;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -1561,6 +1640,7 @@ export interface ApiTypesOfPackagingTypesOfPackaging
     singularName: 'types-of-packaging';
     pluralName: 'types-of-packagings';
     displayName: 'TypesOfPackaging';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -1582,6 +1662,13 @@ export interface ApiTypesOfPackagingTypesOfPackaging
       'oneToMany',
       'api::characteristic.characteristic'
     >;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;

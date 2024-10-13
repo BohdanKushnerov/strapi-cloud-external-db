@@ -39,20 +39,6 @@
         }
       }
     },
-    "brand": {
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      },
-      "type": "enumeration",
-      "enum": [
-        "Royal Canin",
-        "Brit",
-        "Acana"
-      ],
-      "required": true
-    },
     "country": {
       "pluginOptions": {
         "i18n": {
@@ -143,6 +129,12 @@
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::brand-for-animal.brand-for-animal",
+      "inversedBy": "product_cards"
+    },
+    "brand": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::brand.brand",
       "inversedBy": "product_cards"
     }
   }

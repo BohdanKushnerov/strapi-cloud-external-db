@@ -30,6 +30,15 @@
       "relation": "manyToMany",
       "target": "api::characteristic.characteristic",
       "inversedBy": "source_of_protein_in_feeds"
+    },
+    "title": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "string",
+      "unique": true
     }
   }
 }

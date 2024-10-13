@@ -30,6 +30,15 @@
       "relation": "oneToMany",
       "target": "api::characteristic.characteristic",
       "mappedBy": "class_of_feed"
+    },
+    "title": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "string",
+      "unique": true
     }
   }
 }

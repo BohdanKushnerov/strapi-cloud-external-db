@@ -4,7 +4,8 @@
   "info": {
     "singularName": "kind-of-treat",
     "pluralName": "kind-of-treats",
-    "displayName": "KindOfTreat"
+    "displayName": "KindOfTreat",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -29,6 +30,15 @@
       "relation": "oneToMany",
       "target": "api::characteristic.characteristic",
       "mappedBy": "kind_of_treat"
+    },
+    "title": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "string",
+      "unique": true
     }
   }
 }
