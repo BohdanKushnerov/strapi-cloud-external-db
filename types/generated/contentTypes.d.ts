@@ -1379,7 +1379,7 @@ export interface ApiProductSubCardProductSubCard
           localized: true;
         };
       }>;
-    price: Schema.Attribute.Integer &
+    oldPrice: Schema.Attribute.Integer &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -1409,7 +1409,7 @@ export interface ApiProductSubCardProductSubCard
         };
       }> &
       Schema.Attribute.DefaultTo<false>;
-    newPrice: Schema.Attribute.Integer &
+    price: Schema.Attribute.Integer &
       Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{
         i18n: {

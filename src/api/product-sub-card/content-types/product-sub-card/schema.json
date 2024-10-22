@@ -31,7 +31,7 @@
       "type": "string",
       "required": true
     },
-    "price": {
+    "oldPrice": {
       "pluginOptions": {
         "i18n": {
           "localized": true
@@ -69,7 +69,7 @@
       "default": false,
       "required": true
     },
-    "newPrice": {
+    "price": {
       "pluginOptions": {
         "i18n": {
           "localized": true
