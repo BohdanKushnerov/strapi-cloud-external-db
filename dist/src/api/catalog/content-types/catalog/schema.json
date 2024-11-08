@@ -1,0 +1,36 @@
+{
+    "kind": "collectionType",
+    "collectionName": "catalogs",
+    "info": {
+        "singularName": "catalog",
+        "pluralName": "catalogs",
+        "displayName": "Catalog",
+        "description": ""
+    },
+    "options": {
+        "draftAndPublish": true
+    },
+    "pluginOptions": {
+        "i18n": {
+            "localized": true
+        }
+    },
+    "attributes": {
+        "animal_categories": {
+            "type": "relation",
+            "relation": "oneToMany",
+            "target": "api::animal-category.animal-category",
+            "mappedBy": "animal"
+        },
+        "animal": {
+            "pluginOptions": {
+                "i18n": {
+                    "localized": true
+                }
+            },
+            "type": "string",
+            "required": true,
+            "unique": true
+        }
+    }
+}

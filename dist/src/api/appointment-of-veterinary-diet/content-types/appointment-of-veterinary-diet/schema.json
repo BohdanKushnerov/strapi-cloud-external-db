@@ -1,0 +1,44 @@
+{
+    "kind": "collectionType",
+    "collectionName": "appointment_of_veterinary_diets",
+    "info": {
+        "singularName": "appointment-of-veterinary-diet",
+        "pluralName": "appointment-of-veterinary-diets",
+        "displayName": "AppointmentOfVeterinaryDiet",
+        "description": ""
+    },
+    "options": {
+        "draftAndPublish": true
+    },
+    "pluginOptions": {
+        "i18n": {
+            "localized": true
+        }
+    },
+    "attributes": {
+        "value": {
+            "pluginOptions": {
+                "i18n": {
+                    "localized": true
+                }
+            },
+            "type": "string",
+            "unique": true
+        },
+        "characteristics": {
+            "type": "relation",
+            "relation": "manyToMany",
+            "target": "api::characteristic.characteristic",
+            "inversedBy": "appointment_of_veterinary_diets"
+        },
+        "title": {
+            "pluginOptions": {
+                "i18n": {
+                    "localized": true
+                }
+            },
+            "type": "string",
+            "unique": true
+        }
+    }
+}

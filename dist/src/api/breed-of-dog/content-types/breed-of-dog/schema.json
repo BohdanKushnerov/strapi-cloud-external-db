@@ -1,0 +1,44 @@
+{
+    "kind": "collectionType",
+    "collectionName": "breed_of_dogs",
+    "info": {
+        "singularName": "breed-of-dog",
+        "pluralName": "breed-of-dogs",
+        "displayName": "BreedOfDog",
+        "description": ""
+    },
+    "options": {
+        "draftAndPublish": true
+    },
+    "pluginOptions": {
+        "i18n": {
+            "localized": true
+        }
+    },
+    "attributes": {
+        "value": {
+            "pluginOptions": {
+                "i18n": {
+                    "localized": true
+                }
+            },
+            "type": "string",
+            "unique": true
+        },
+        "characteristics": {
+            "type": "relation",
+            "relation": "manyToMany",
+            "target": "api::characteristic.characteristic",
+            "inversedBy": "breed_of_dogs"
+        },
+        "title": {
+            "pluginOptions": {
+                "i18n": {
+                    "localized": true
+                }
+            },
+            "type": "string",
+            "unique": true
+        }
+    }
+}

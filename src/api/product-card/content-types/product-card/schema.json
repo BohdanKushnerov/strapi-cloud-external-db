@@ -136,6 +136,30 @@
       "relation": "manyToOne",
       "target": "api::brand.brand",
       "inversedBy": "product_cards"
+    },
+    "minPriceInStockForSort": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "integer"
+    },
+    "maxPriceInStockForSort": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "integer"
+    },
+    "minPriceTest": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "string"
     }
   }
 }

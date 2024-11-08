@@ -1335,6 +1335,24 @@ export interface ApiProductCardProductCard extends Struct.CollectionTypeSchema {
       'api::brand-for-animal.brand-for-animal'
     >;
     brand: Schema.Attribute.Relation<'manyToOne', 'api::brand.brand'>;
+    minPriceInStockForSort: Schema.Attribute.Integer &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    maxPriceInStockForSort: Schema.Attribute.Integer &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    minPriceTest: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;
@@ -1410,13 +1428,23 @@ export interface ApiProductSubCardProductSubCard
       }> &
       Schema.Attribute.DefaultTo<false>;
     price: Schema.Attribute.Integer &
-      Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
         };
-      }> &
-      Schema.Attribute.DefaultTo<0>;
+      }>;
+    priceForSortCheap: Schema.Attribute.Integer &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    priceForSortExpensive: Schema.Attribute.Integer &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     createdAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     publishedAt: Schema.Attribute.DateTime;

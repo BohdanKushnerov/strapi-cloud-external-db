@@ -1,0 +1,165 @@
+{
+    "kind": "collectionType",
+    "collectionName": "product_cards",
+    "info": {
+        "singularName": "product-card",
+        "pluralName": "product-cards",
+        "displayName": "ProductCard",
+        "description": ""
+    },
+    "options": {
+        "draftAndPublish": true
+    },
+    "pluginOptions": {
+        "i18n": {
+            "localized": true
+        }
+    },
+    "attributes": {
+        "title": {
+            "type": "string",
+            "required": true,
+            "unique": true,
+            "pluginOptions": {
+                "i18n": {
+                    "localized": true
+                }
+            }
+        },
+        "images": {
+            "type": "media",
+            "multiple": true,
+            "required": true,
+            "allowedTypes": [
+                "images"
+            ],
+            "pluginOptions": {
+                "i18n": {
+                    "localized": true
+                }
+            }
+        },
+        "country": {
+            "pluginOptions": {
+                "i18n": {
+                    "localized": true
+                }
+            },
+            "type": "string",
+            "required": true,
+            "unique": false
+        },
+        "promotion": {
+            "pluginOptions": {
+                "i18n": {
+                    "localized": true
+                }
+            },
+            "type": "boolean",
+            "default": false,
+            "required": true
+        },
+        "promotionQuantity": {
+            "pluginOptions": {
+                "i18n": {
+                    "localized": true
+                }
+            },
+            "type": "integer",
+            "required": true,
+            "default": 0
+        },
+        "productUrl": {
+            "pluginOptions": {
+                "i18n": {
+                    "localized": true
+                }
+            },
+            "type": "string",
+            "required": true,
+            "unique": true
+        },
+        "product_sub_cards": {
+            "type": "relation",
+            "relation": "oneToMany",
+            "target": "api::product-sub-card.product-sub-card",
+            "mappedBy": "product_card"
+        },
+        "eco": {
+            "pluginOptions": {
+                "i18n": {
+                    "localized": true
+                }
+            },
+            "type": "boolean",
+            "default": false,
+            "required": true
+        },
+        "topSeller": {
+            "pluginOptions": {
+                "i18n": {
+                    "localized": true
+                }
+            },
+            "type": "boolean",
+            "default": false,
+            "required": true
+        },
+        "animal_sub_category": {
+            "type": "relation",
+            "relation": "manyToOne",
+            "target": "api::animal-sub-category.animal-sub-category",
+            "inversedBy": "product_cards"
+        },
+        "description": {
+            "pluginOptions": {
+                "i18n": {
+                    "localized": true
+                }
+            },
+            "type": "json"
+        },
+        "characteristic": {
+            "type": "relation",
+            "relation": "oneToOne",
+            "target": "api::characteristic.characteristic",
+            "inversedBy": "product_card"
+        },
+        "brand_for_animal": {
+            "type": "relation",
+            "relation": "manyToOne",
+            "target": "api::brand-for-animal.brand-for-animal",
+            "inversedBy": "product_cards"
+        },
+        "brand": {
+            "type": "relation",
+            "relation": "manyToOne",
+            "target": "api::brand.brand",
+            "inversedBy": "product_cards"
+        },
+        "minPriceInStockForSort": {
+            "pluginOptions": {
+                "i18n": {
+                    "localized": true
+                }
+            },
+            "type": "integer"
+        },
+        "maxPriceInStockForSort": {
+            "pluginOptions": {
+                "i18n": {
+                    "localized": true
+                }
+            },
+            "type": "integer"
+        },
+        "minPriceTest": {
+            "pluginOptions": {
+                "i18n": {
+                    "localized": true
+                }
+            },
+            "type": "string"
+        }
+    }
+}

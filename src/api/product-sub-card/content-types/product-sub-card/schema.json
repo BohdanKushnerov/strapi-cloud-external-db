@@ -76,8 +76,23 @@
         }
       },
       "type": "integer",
-      "default": 0,
-      "required": true
+      "required": false
+    },
+    "priceForSortCheap": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "integer"
+    },
+    "priceForSortExpensive": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "integer"
     }
   }
 }

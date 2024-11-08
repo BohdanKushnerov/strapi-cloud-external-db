@@ -1,0 +1,51 @@
+{
+    "kind": "collectionType",
+    "collectionName": "brands",
+    "info": {
+        "singularName": "brand",
+        "pluralName": "brands",
+        "displayName": "Brand",
+        "description": ""
+    },
+    "options": {
+        "draftAndPublish": true
+    },
+    "pluginOptions": {
+        "i18n": {
+            "localized": true
+        }
+    },
+    "attributes": {
+        "title": {
+            "pluginOptions": {
+                "i18n": {
+                    "localized": true
+                }
+            },
+            "type": "string",
+            "required": true,
+            "unique": true
+        },
+        "brand_for_animals": {
+            "type": "relation",
+            "relation": "oneToMany",
+            "target": "api::brand-for-animal.brand-for-animal",
+            "mappedBy": "brand"
+        },
+        "product_cards": {
+            "type": "relation",
+            "relation": "oneToMany",
+            "target": "api::product-card.product-card",
+            "mappedBy": "brand"
+        },
+        "value": {
+            "pluginOptions": {
+                "i18n": {
+                    "localized": true
+                }
+            },
+            "type": "string",
+            "unique": true
+        }
+    }
+}
