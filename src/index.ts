@@ -31,7 +31,7 @@ export default {
 
     strapi.db.lifecycles.subscribe(async (event) => {
       if (
-        event.action === "beforeUpdate" &&
+        (event.action === "beforeUpdate" || event.action === 'beforeCreate') &&
         event.model.uid === "api::product-sub-card.product-sub-card" &&
         event.params.data.inStock === false
       ) {
@@ -40,7 +40,7 @@ export default {
       }
 
       if (
-        event.action === "beforeUpdate" &&
+        (event.action === "beforeUpdate" || event.action === "beforeCreate") &&
         event.model.uid === "api::product-sub-card.product-sub-card" &&
         event.params.data.inStock === true
       ) {

@@ -27,13 +27,13 @@ exports.default = {
             },
         });
         strapi.db.lifecycles.subscribe(async (event) => {
-            if (event.action === "beforeUpdate" &&
+            if ((event.action === "beforeUpdate" || event.action === 'beforeCreate') &&
                 event.model.uid === "api::product-sub-card.product-sub-card" &&
                 event.params.data.inStock === false) {
                 event.params.data.priceForSortCheap = null;
                 event.params.data.priceForSortExpensive = 0;
             }
-            if (event.action === "beforeUpdate" &&
+            if ((event.action === "beforeUpdate" || event.action === "beforeCreate") &&
                 event.model.uid === "api::product-sub-card.product-sub-card" &&
                 event.params.data.inStock === true) {
                 event.params.data.priceForSortCheap = event.params.data.price;
