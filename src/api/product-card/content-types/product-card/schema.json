@@ -18,64 +18,64 @@
   "attributes": {
     "title": {
       "type": "string",
-      "required": true,
-      "unique": true,
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
-      }
+      },
+      "required": true,
+      "unique": true
     },
     "images": {
       "type": "media",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "multiple": true,
       "required": true,
       "allowedTypes": [
         "images"
-      ],
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
+      ]
     },
     "country": {
+      "type": "string",
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       },
-      "type": "string",
       "required": true,
       "unique": false
     },
     "promotion": {
+      "type": "boolean",
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       },
-      "type": "boolean",
-      "default": false,
-      "required": true
+      "required": true,
+      "default": false
     },
     "promotionQuantity": {
+      "type": "integer",
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       },
-      "type": "integer",
       "required": true,
       "default": 0
     },
     "productUrl": {
+      "type": "string",
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       },
-      "type": "string",
       "required": true,
       "unique": true
     },
@@ -86,24 +86,24 @@
       "mappedBy": "product_card"
     },
     "eco": {
+      "type": "boolean",
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       },
-      "type": "boolean",
-      "default": false,
-      "required": true
+      "required": true,
+      "default": false
     },
     "topSeller": {
+      "type": "boolean",
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       },
-      "type": "boolean",
-      "default": false,
-      "required": true
+      "required": true,
+      "default": false
     },
     "animal_sub_category": {
       "type": "relation",
@@ -112,12 +112,12 @@
       "inversedBy": "product_cards"
     },
     "description": {
+      "type": "json",
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
-      },
-      "type": "json"
+      }
     },
     "characteristic": {
       "type": "relation",
@@ -136,30 +136,6 @@
       "relation": "manyToOne",
       "target": "api::brand.brand",
       "inversedBy": "product_cards"
-    },
-    "minPriceInStockForSort": {
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      },
-      "type": "integer"
-    },
-    "maxPriceInStockForSort": {
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      },
-      "type": "integer"
-    },
-    "minPriceTest": {
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      },
-      "type": "string"
     }
   }
 }
