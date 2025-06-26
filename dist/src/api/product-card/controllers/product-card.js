@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const strapi_1 = require("@strapi/strapi");
 exports.default = strapi_1.factories.createCoreController("api::product-card.product-card", ({ strapi }) => ({
     async facets(ctx) {
-        var _a, _b;
+        var _a, _b, _c, _d;
         try {
             console.log(11111111111111);
             const rawFilters = ctx.query.filters;
@@ -51,8 +51,33 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
   `);
                 params.push(...parsedFilters.brand);
             }
+            // Country
+            if ((_b = parsedFilters.country) === null || _b === void 0 ? void 0 : _b.length) {
+                const countryPlaceholders = parsedFilters.country
+                    .map(() => "?")
+                    .join(", ");
+                whereClauses.push(`
+    pc.country IN (${countryPlaceholders})
+  `);
+                params.push(...parsedFilters.country);
+            }
+            // Price (min and max)
+            if (((_c = parsedFilters.price) === null || _c === void 0 ? void 0 : _c.length) === 2) {
+                const [minPrice, maxPrice] = parsedFilters.price;
+                whereClauses.push(`
+    EXISTS (
+      SELECT 1
+      FROM product_sub_cards_product_card_lnk lnk
+      JOIN product_sub_cards ps ON ps.id = lnk.product_sub_card_id
+      WHERE lnk.product_card_id = pc.id
+        AND ps.in_stock = true
+        AND ps.price BETWEEN ? AND ?
+    )
+  `);
+                params.push(minPrice, maxPrice);
+            }
             // Age of dogs
-            if ((_b = parsedFilters.age_of_dogs) === null || _b === void 0 ? void 0 : _b.length) {
+            if ((_d = parsedFilters.age_of_dogs) === null || _d === void 0 ? void 0 : _d.length) {
                 const agePlaceholders = parsedFilters.age_of_dogs
                     .map(() => "?") // Використовуємо ? замість $n
                     .join(", ");
@@ -214,6 +239,7 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
           FROM filtered_products fp
           JOIN product_sub_cards_product_card_lnk lnk ON lnk.product_card_id = fp.id
           JOIN product_sub_cards ps ON ps.id = lnk.product_sub_card_id
+          WHERE ps.in_stock = true
 
           UNION ALL
 
@@ -224,7 +250,8 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
             'price' AS group_by_type
           FROM filtered_products fp
           JOIN product_sub_cards_product_card_lnk lnk ON lnk.product_card_id = fp.id
-          JOIN product_sub_cards ps ON ps.id = lnk.product_sub_card_id;
+          JOIN product_sub_cards ps ON ps.id = lnk.product_sub_card_id
+          WHERE ps.in_stock = true;
           `, params);
             const data = result.rows;
             ctx.body = data;

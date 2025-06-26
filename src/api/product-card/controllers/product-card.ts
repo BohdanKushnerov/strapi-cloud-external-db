@@ -64,6 +64,35 @@ export default factories.createCoreController(
           params.push(...parsedFilters.brand);
         }
 
+        // Country
+        if (parsedFilters.country?.length) {
+          const countryPlaceholders = parsedFilters.country
+            .map(() => "?")
+            .join(", ");
+          whereClauses.push(`
+    pc.country IN (${countryPlaceholders})
+  `);
+          params.push(...parsedFilters.country);
+        }
+
+        // Price (min and max)
+        if (parsedFilters.price?.length === 2) {
+          const [minPrice, maxPrice] = parsedFilters.price;
+
+          whereClauses.push(`
+    EXISTS (
+      SELECT 1
+      FROM product_sub_cards_product_card_lnk lnk
+      JOIN product_sub_cards ps ON ps.id = lnk.product_sub_card_id
+      WHERE lnk.product_card_id = pc.id
+        AND ps.in_stock = true
+        AND ps.price BETWEEN ? AND ?
+    )
+  `);
+
+          params.push(minPrice, maxPrice);
+        }
+
         // Age of dogs
         if (parsedFilters.age_of_dogs?.length) {
           const agePlaceholders = parsedFilters.age_of_dogs
@@ -235,6 +264,7 @@ export default factories.createCoreController(
           FROM filtered_products fp
           JOIN product_sub_cards_product_card_lnk lnk ON lnk.product_card_id = fp.id
           JOIN product_sub_cards ps ON ps.id = lnk.product_sub_card_id
+          WHERE ps.in_stock = true
 
           UNION ALL
 
@@ -245,7 +275,8 @@ export default factories.createCoreController(
             'price' AS group_by_type
           FROM filtered_products fp
           JOIN product_sub_cards_product_card_lnk lnk ON lnk.product_card_id = fp.id
-          JOIN product_sub_cards ps ON ps.id = lnk.product_sub_card_id;
+          JOIN product_sub_cards ps ON ps.id = lnk.product_sub_card_id
+          WHERE ps.in_stock = true;
           `,
           params
         );
