@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const strapi_1 = require("@strapi/strapi");
 exports.default = strapi_1.factories.createCoreController("api::product-card.product-card", ({ strapi }) => ({
     async facets(ctx) {
-        var _a, _b, _c, _d;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
         try {
             console.log(11111111111111);
             const rawFilters = ctx.query.filters;
@@ -23,7 +23,9 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
                 }
             }
             console.log("Parsed filters:", parsedFilters);
-            const subcatHref = "dry-food-for-dogs";
+            // const subcatHref = "dry-food-for-dogs";
+            // const subcatHref = "therapeutic-food-for-dogs";
+            const subcatHref = "cans-for-dogs";
             // ======================================
             const whereClauses = [];
             const params = [subcatHref]; // Перший параметр
@@ -62,7 +64,9 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
                 params.push(...parsedFilters.country);
             }
             // Price (min and max)
-            if (((_c = parsedFilters.price) === null || _c === void 0 ? void 0 : _c.length) === 2) {
+            if (((_c = parsedFilters.price) === null || _c === void 0 ? void 0 : _c.length) === 2 &&
+                parsedFilters.price[0] !== "" &&
+                parsedFilters.price[1] !== "") {
                 const [minPrice, maxPrice] = parsedFilters.price;
                 whereClauses.push(`
     EXISTS (
@@ -76,8 +80,25 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
   `);
                 params.push(minPrice, maxPrice);
             }
+            // Class of Feed
+            if ((_d = parsedFilters.class_of_feed) === null || _d === void 0 ? void 0 : _d.length) {
+                const classPlaceholders = parsedFilters.class_of_feed
+                    .map(() => "?")
+                    .join(", ");
+                whereClauses.push(`
+    EXISTS (
+      SELECT 1
+      FROM product_cards_characteristic_lnk cclnk
+      JOIN characteristics c ON c.id = cclnk.characteristic_id
+      JOIN characteristics_class_of_feed_lnk cofcl ON cofcl.characteristic_id = c.id
+      JOIN class_of_feeds cof ON cof.id = cofcl.class_of_feed_id
+      WHERE cclnk.product_card_id = pc.id AND cof.value IN (${classPlaceholders})
+    )
+  `);
+                params.push(...parsedFilters.class_of_feed);
+            }
             // Age of dogs
-            if ((_d = parsedFilters.age_of_dogs) === null || _d === void 0 ? void 0 : _d.length) {
+            if ((_e = parsedFilters.age_of_dogs) === null || _e === void 0 ? void 0 : _e.length) {
                 const agePlaceholders = parsedFilters.age_of_dogs
                     .map(() => "?") // Використовуємо ? замість $n
                     .join(", ");
@@ -92,6 +113,127 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
     )
   `);
                 params.push(...parsedFilters.age_of_dogs);
+            }
+            // Breed of dogs
+            if ((_f = parsedFilters.breed_of_dogs) === null || _f === void 0 ? void 0 : _f.length) {
+                const breedPlaceholders = parsedFilters.breed_of_dogs
+                    .map(() => "?")
+                    .join(", ");
+                whereClauses.push(`
+    EXISTS (
+      SELECT 1
+      FROM product_cards_characteristic_lnk cclnk
+      JOIN characteristics c ON c.id = cclnk.characteristic_id
+      JOIN breed_of_dogs_characteristics_lnk bdcl ON bdcl.characteristic_id = c.id
+      JOIN breed_of_dogs bd ON bd.id = bdcl.breed_of_dog_id
+      WHERE cclnk.product_card_id = pc.id AND bd.value IN (${breedPlaceholders})
+    )
+  `);
+                params.push(...parsedFilters.breed_of_dogs);
+            }
+            // Breed Sizes
+            if ((_g = parsedFilters.breed_sizes) === null || _g === void 0 ? void 0 : _g.length) {
+                const sizePlaceholders = parsedFilters.breed_sizes
+                    .map(() => "?")
+                    .join(", ");
+                whereClauses.push(`
+    EXISTS (
+      SELECT 1
+      FROM product_cards_characteristic_lnk cclnk
+      JOIN characteristics c ON c.id = cclnk.characteristic_id
+      JOIN breed_sizes_characteristics_lnk bscl ON bscl.characteristic_id = c.id
+      JOIN breed_sizes bs ON bs.id = bscl.breed_size_id
+      WHERE cclnk.product_card_id = pc.id AND bs.value IN (${sizePlaceholders})
+    )
+  `);
+                params.push(...parsedFilters.breed_sizes);
+            }
+            // Source of Protein in Feeds
+            if ((_h = parsedFilters.source_of_protein_in_feeds) === null || _h === void 0 ? void 0 : _h.length) {
+                const proteinPlaceholders = parsedFilters.source_of_protein_in_feeds
+                    .map(() => "?")
+                    .join(", ");
+                whereClauses.push(`
+    EXISTS (
+      SELECT 1
+      FROM product_cards_characteristic_lnk cclnk
+      JOIN characteristics c ON c.id = cclnk.characteristic_id
+      JOIN source_of_protein_in_feeds_characteristics_lnk sopcl ON sopcl.characteristic_id = c.id
+      JOIN source_of_protein_in_feeds sop ON sop.id = sopcl.source_of_protein_in_feed_id
+      WHERE cclnk.product_card_id = pc.id AND sop.value IN (${proteinPlaceholders})
+    )
+  `);
+                params.push(...parsedFilters.source_of_protein_in_feeds);
+            }
+            // Special Dietary Needs
+            if ((_j = parsedFilters.special_dietary_needs) === null || _j === void 0 ? void 0 : _j.length) {
+                const dietaryPlaceholders = parsedFilters.special_dietary_needs
+                    .map(() => "?")
+                    .join(", ");
+                whereClauses.push(`
+    EXISTS (
+      SELECT 1
+      FROM product_cards_characteristic_lnk cclnk
+      JOIN characteristics c ON c.id = cclnk.characteristic_id
+      JOIN special_dietary_needs_characteristics_lnk sdncl ON sdncl.characteristic_id = c.id
+      JOIN special_dietary_needs sdn ON sdn.id = sdncl.special_dietary_need_id
+      WHERE cclnk.product_card_id = pc.id AND sdn.value IN (${dietaryPlaceholders})
+    )
+  `);
+                params.push(...parsedFilters.special_dietary_needs);
+            }
+            // =============================therapeutic-food-for-dogs=======================================
+            // Appointment of Veterinary Diets
+            if ((_k = parsedFilters.appointment_of_veterinary_diets) === null || _k === void 0 ? void 0 : _k.length) {
+                const appointmentPlaceholders = parsedFilters.appointment_of_veterinary_diets
+                    .map(() => "?")
+                    .join(", ");
+                whereClauses.push(`
+    EXISTS (
+      SELECT 1
+      FROM product_cards_characteristic_lnk cclnk
+      JOIN characteristics c ON c.id = cclnk.characteristic_id
+      JOIN appointment_of_veterinary_diets_characteristics_lnk avdcl ON avdcl.characteristic_id = c.id
+      JOIN appointment_of_veterinary_diets avd ON avd.id = avdcl.appointment_of_veterinary_diet_id
+      WHERE cclnk.product_card_id = pc.id AND avd.value IN (${appointmentPlaceholders})
+    )
+  `);
+                params.push(...parsedFilters.appointment_of_veterinary_diets);
+            }
+            // =============================cans-for-dogs=======================================
+            // Type of Canned Food
+            if ((_l = parsedFilters.type_of_canned_food) === null || _l === void 0 ? void 0 : _l.length) {
+                const cannedFoodPlaceholders = parsedFilters.type_of_canned_food
+                    .map(() => "?")
+                    .join(", ");
+                whereClauses.push(`
+    EXISTS (
+      SELECT 1
+      FROM product_cards_characteristic_lnk cclnk
+      JOIN characteristics c ON c.id = cclnk.characteristic_id
+      JOIN characteristics_type_of_canned_food_lnk ctcf ON ctcf.characteristic_id = c.id
+      JOIN type_of_canned_foods tcf ON tcf.id = ctcf.type_of_canned_food_id
+      WHERE cclnk.product_card_id = pc.id AND tcf.value IN (${cannedFoodPlaceholders})
+    )
+  `);
+                params.push(...parsedFilters.type_of_canned_food);
+            }
+            // Types of Packaging
+            if ((_m = parsedFilters.type_of_packaging) === null || _m === void 0 ? void 0 : _m.length) {
+                const packagingPlaceholders = parsedFilters.type_of_packaging
+                    .map(() => "?")
+                    .join(", ");
+                whereClauses.push(`
+    EXISTS (
+      SELECT 1
+      FROM product_cards_characteristic_lnk cclnk
+      JOIN characteristics c ON c.id = cclnk.characteristic_id
+      JOIN characteristics_type_of_packaging_lnk ctop ON ctop.characteristic_id = c.id
+      JOIN type_of_packagings top ON top.id = ctop.type_of_packaging_id
+      WHERE cclnk.product_card_id = pc.id AND top.value IN (${packagingPlaceholders})
+    )
+  `);
+                params.push(...parsedFilters.type_of_packaging);
             }
             // Об'єднуємо всі умови в один WHERE
             const whereSQL = whereClauses.length > 1
@@ -251,7 +393,35 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
           FROM filtered_products fp
           JOIN product_sub_cards_product_card_lnk lnk ON lnk.product_card_id = fp.id
           JOIN product_sub_cards ps ON ps.id = lnk.product_sub_card_id
-          WHERE ps.in_stock = true;
+          WHERE ps.in_stock = true
+
+          UNION ALL
+
+          -- 12. Тип консервованого корму (type_of_canned_food)
+          SELECT 
+            tcf.value AS label,
+            COUNT(DISTINCT fp.id) AS count,
+            'type_of_canned_food' AS group_by_type
+          FROM filtered_products fp
+          JOIN product_cards_characteristic_lnk cclnk ON cclnk.product_card_id = fp.id
+          JOIN characteristics c ON c.id = cclnk.characteristic_id
+          JOIN characteristics_type_of_canned_food_lnk ctcf ON ctcf.characteristic_id = c.id
+          JOIN type_of_canned_foods tcf ON tcf.id = ctcf.type_of_canned_food_id
+          GROUP BY tcf.value
+
+          UNION ALL
+
+          -- 13. Типи пакування (type_of_packaging)
+          SELECT 
+            top.value AS label,
+            COUNT(DISTINCT fp.id) AS count,
+            'type_of_packaging' AS group_by_type
+          FROM filtered_products fp
+          JOIN product_cards_characteristic_lnk cclnk ON cclnk.product_card_id = fp.id
+          JOIN characteristics c ON c.id = cclnk.characteristic_id
+          JOIN characteristics_type_of_packaging_lnk ctop ON ctop.characteristic_id = c.id
+          JOIN type_of_packagings top ON top.id = ctop.type_of_packaging_id
+          GROUP BY top.value;
           `, params);
             const data = result.rows;
             ctx.body = data;

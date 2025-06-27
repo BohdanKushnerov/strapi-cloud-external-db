@@ -30,7 +30,9 @@ export default factories.createCoreController(
 
         console.log("Parsed filters:", parsedFilters);
 
-        const subcatHref = "dry-food-for-dogs";
+        // const subcatHref = "dry-food-for-dogs";
+        // const subcatHref = "therapeutic-food-for-dogs";
+        const subcatHref = "cans-for-dogs";
 
         // ======================================
         const whereClauses = [];
@@ -76,7 +78,11 @@ export default factories.createCoreController(
         }
 
         // Price (min and max)
-        if (parsedFilters.price?.length === 2) {
+        if (
+          parsedFilters.price?.length === 2 &&
+          parsedFilters.price[0] !== "" &&
+          parsedFilters.price[1] !== ""
+        ) {
           const [minPrice, maxPrice] = parsedFilters.price;
 
           whereClauses.push(`
@@ -91,6 +97,26 @@ export default factories.createCoreController(
   `);
 
           params.push(minPrice, maxPrice);
+        }
+
+        // Class of Feed
+        if (parsedFilters.class_of_feed?.length) {
+          const classPlaceholders = parsedFilters.class_of_feed
+            .map(() => "?")
+            .join(", ");
+
+          whereClauses.push(`
+    EXISTS (
+      SELECT 1
+      FROM product_cards_characteristic_lnk cclnk
+      JOIN characteristics c ON c.id = cclnk.characteristic_id
+      JOIN characteristics_class_of_feed_lnk cofcl ON cofcl.characteristic_id = c.id
+      JOIN class_of_feeds cof ON cof.id = cofcl.class_of_feed_id
+      WHERE cclnk.product_card_id = pc.id AND cof.value IN (${classPlaceholders})
+    )
+  `);
+
+          params.push(...parsedFilters.class_of_feed);
         }
 
         // Age of dogs
@@ -111,6 +137,150 @@ export default factories.createCoreController(
   `);
 
           params.push(...parsedFilters.age_of_dogs);
+        }
+
+        // Breed of dogs
+        if (parsedFilters.breed_of_dogs?.length) {
+          const breedPlaceholders = parsedFilters.breed_of_dogs
+            .map(() => "?")
+            .join(", ");
+
+          whereClauses.push(`
+    EXISTS (
+      SELECT 1
+      FROM product_cards_characteristic_lnk cclnk
+      JOIN characteristics c ON c.id = cclnk.characteristic_id
+      JOIN breed_of_dogs_characteristics_lnk bdcl ON bdcl.characteristic_id = c.id
+      JOIN breed_of_dogs bd ON bd.id = bdcl.breed_of_dog_id
+      WHERE cclnk.product_card_id = pc.id AND bd.value IN (${breedPlaceholders})
+    )
+  `);
+
+          params.push(...parsedFilters.breed_of_dogs);
+        }
+
+        // Breed Sizes
+        if (parsedFilters.breed_sizes?.length) {
+          const sizePlaceholders = parsedFilters.breed_sizes
+            .map(() => "?")
+            .join(", ");
+
+          whereClauses.push(`
+    EXISTS (
+      SELECT 1
+      FROM product_cards_characteristic_lnk cclnk
+      JOIN characteristics c ON c.id = cclnk.characteristic_id
+      JOIN breed_sizes_characteristics_lnk bscl ON bscl.characteristic_id = c.id
+      JOIN breed_sizes bs ON bs.id = bscl.breed_size_id
+      WHERE cclnk.product_card_id = pc.id AND bs.value IN (${sizePlaceholders})
+    )
+  `);
+
+          params.push(...parsedFilters.breed_sizes);
+        }
+
+        // Source of Protein in Feeds
+        if (parsedFilters.source_of_protein_in_feeds?.length) {
+          const proteinPlaceholders = parsedFilters.source_of_protein_in_feeds
+            .map(() => "?")
+            .join(", ");
+
+          whereClauses.push(`
+    EXISTS (
+      SELECT 1
+      FROM product_cards_characteristic_lnk cclnk
+      JOIN characteristics c ON c.id = cclnk.characteristic_id
+      JOIN source_of_protein_in_feeds_characteristics_lnk sopcl ON sopcl.characteristic_id = c.id
+      JOIN source_of_protein_in_feeds sop ON sop.id = sopcl.source_of_protein_in_feed_id
+      WHERE cclnk.product_card_id = pc.id AND sop.value IN (${proteinPlaceholders})
+    )
+  `);
+
+          params.push(...parsedFilters.source_of_protein_in_feeds);
+        }
+
+        // Special Dietary Needs
+        if (parsedFilters.special_dietary_needs?.length) {
+          const dietaryPlaceholders = parsedFilters.special_dietary_needs
+            .map(() => "?")
+            .join(", ");
+
+          whereClauses.push(`
+    EXISTS (
+      SELECT 1
+      FROM product_cards_characteristic_lnk cclnk
+      JOIN characteristics c ON c.id = cclnk.characteristic_id
+      JOIN special_dietary_needs_characteristics_lnk sdncl ON sdncl.characteristic_id = c.id
+      JOIN special_dietary_needs sdn ON sdn.id = sdncl.special_dietary_need_id
+      WHERE cclnk.product_card_id = pc.id AND sdn.value IN (${dietaryPlaceholders})
+    )
+  `);
+
+          params.push(...parsedFilters.special_dietary_needs);
+        }
+
+        // =============================therapeutic-food-for-dogs=======================================
+        // Appointment of Veterinary Diets
+        if (parsedFilters.appointment_of_veterinary_diets?.length) {
+          const appointmentPlaceholders =
+            parsedFilters.appointment_of_veterinary_diets
+              .map(() => "?")
+              .join(", ");
+
+          whereClauses.push(`
+    EXISTS (
+      SELECT 1
+      FROM product_cards_characteristic_lnk cclnk
+      JOIN characteristics c ON c.id = cclnk.characteristic_id
+      JOIN appointment_of_veterinary_diets_characteristics_lnk avdcl ON avdcl.characteristic_id = c.id
+      JOIN appointment_of_veterinary_diets avd ON avd.id = avdcl.appointment_of_veterinary_diet_id
+      WHERE cclnk.product_card_id = pc.id AND avd.value IN (${appointmentPlaceholders})
+    )
+  `);
+
+          params.push(...parsedFilters.appointment_of_veterinary_diets);
+        }
+
+        // =============================cans-for-dogs=======================================
+
+        // Type of Canned Food
+        if (parsedFilters.type_of_canned_food?.length) {
+          const cannedFoodPlaceholders = parsedFilters.type_of_canned_food
+            .map(() => "?")
+            .join(", ");
+
+          whereClauses.push(`
+    EXISTS (
+      SELECT 1
+      FROM product_cards_characteristic_lnk cclnk
+      JOIN characteristics c ON c.id = cclnk.characteristic_id
+      JOIN characteristics_type_of_canned_food_lnk ctcf ON ctcf.characteristic_id = c.id
+      JOIN type_of_canned_foods tcf ON tcf.id = ctcf.type_of_canned_food_id
+      WHERE cclnk.product_card_id = pc.id AND tcf.value IN (${cannedFoodPlaceholders})
+    )
+  `);
+
+          params.push(...parsedFilters.type_of_canned_food);
+        }
+
+        // Types of Packaging
+        if (parsedFilters.type_of_packaging?.length) {
+          const packagingPlaceholders = parsedFilters.type_of_packaging
+            .map(() => "?")
+            .join(", ");
+
+          whereClauses.push(`
+    EXISTS (
+      SELECT 1
+      FROM product_cards_characteristic_lnk cclnk
+      JOIN characteristics c ON c.id = cclnk.characteristic_id
+      JOIN characteristics_type_of_packaging_lnk ctop ON ctop.characteristic_id = c.id
+      JOIN type_of_packagings top ON top.id = ctop.type_of_packaging_id
+      WHERE cclnk.product_card_id = pc.id AND top.value IN (${packagingPlaceholders})
+    )
+  `);
+
+          params.push(...parsedFilters.type_of_packaging);
         }
 
         // Об'єднуємо всі умови в один WHERE
@@ -276,7 +446,35 @@ export default factories.createCoreController(
           FROM filtered_products fp
           JOIN product_sub_cards_product_card_lnk lnk ON lnk.product_card_id = fp.id
           JOIN product_sub_cards ps ON ps.id = lnk.product_sub_card_id
-          WHERE ps.in_stock = true;
+          WHERE ps.in_stock = true
+
+          UNION ALL
+
+          -- 12. Тип консервованого корму (type_of_canned_food)
+          SELECT 
+            tcf.value AS label,
+            COUNT(DISTINCT fp.id) AS count,
+            'type_of_canned_food' AS group_by_type
+          FROM filtered_products fp
+          JOIN product_cards_characteristic_lnk cclnk ON cclnk.product_card_id = fp.id
+          JOIN characteristics c ON c.id = cclnk.characteristic_id
+          JOIN characteristics_type_of_canned_food_lnk ctcf ON ctcf.characteristic_id = c.id
+          JOIN type_of_canned_foods tcf ON tcf.id = ctcf.type_of_canned_food_id
+          GROUP BY tcf.value
+
+          UNION ALL
+
+          -- 13. Типи пакування (type_of_packaging)
+          SELECT 
+            top.value AS label,
+            COUNT(DISTINCT fp.id) AS count,
+            'type_of_packaging' AS group_by_type
+          FROM filtered_products fp
+          JOIN product_cards_characteristic_lnk cclnk ON cclnk.product_card_id = fp.id
+          JOIN characteristics c ON c.id = cclnk.characteristic_id
+          JOIN characteristics_type_of_packaging_lnk ctop ON ctop.characteristic_id = c.id
+          JOIN type_of_packagings top ON top.id = ctop.type_of_packaging_id
+          GROUP BY top.value;
           `,
           params
         );

@@ -909,9 +909,9 @@ export interface ApiCharacteristicCharacteristic
       'manyToOne',
       'api::type-of-canned-food.type-of-canned-food'
     >;
-    types_of_packaging: Schema.Attribute.Relation<
+    type_of_packaging: Schema.Attribute.Relation<
       'manyToOne',
-      'api::types-of-packaging.types-of-packaging'
+      'api::type-of-packaging.type-of-packaging'
     >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -1531,14 +1531,13 @@ export interface ApiTypeOfCannedFoodTypeOfCannedFood
   };
 }
 
-export interface ApiTypesOfPackagingTypesOfPackaging
+export interface ApiTypeOfPackagingTypeOfPackaging
   extends Struct.CollectionTypeSchema {
-  collectionName: 'types_of_packagings';
+  collectionName: 'type_of_packagings';
   info: {
-    description: '';
-    displayName: 'TypesOfPackaging';
-    pluralName: 'types-of-packagings';
-    singularName: 'types-of-packaging';
+    displayName: 'TypeOfPackaging';
+    pluralName: 'type-of-packagings';
+    singularName: 'type-of-packaging';
   };
   options: {
     draftAndPublish: true;
@@ -1559,11 +1558,11 @@ export interface ApiTypesOfPackagingTypesOfPackaging
     locale: Schema.Attribute.String;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
-      'api::types-of-packaging.types-of-packaging'
+      'api::type-of-packaging.type-of-packaging'
     >;
     publishedAt: Schema.Attribute.DateTime;
     title: Schema.Attribute.String &
-      Schema.Attribute.Unique &
+      Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -1573,7 +1572,7 @@ export interface ApiTypesOfPackagingTypesOfPackaging
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     value: Schema.Attribute.String &
-      Schema.Attribute.Unique &
+      Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
@@ -2111,7 +2110,7 @@ declare module '@strapi/strapi' {
       'api::source-of-protein-in-feed.source-of-protein-in-feed': ApiSourceOfProteinInFeedSourceOfProteinInFeed;
       'api::special-dietary-need.special-dietary-need': ApiSpecialDietaryNeedSpecialDietaryNeed;
       'api::type-of-canned-food.type-of-canned-food': ApiTypeOfCannedFoodTypeOfCannedFood;
-      'api::types-of-packaging.types-of-packaging': ApiTypesOfPackagingTypesOfPackaging;
+      'api::type-of-packaging.type-of-packaging': ApiTypeOfPackagingTypeOfPackaging;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

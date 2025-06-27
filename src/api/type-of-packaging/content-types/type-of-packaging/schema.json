@@ -1,11 +1,10 @@
 {
   "kind": "collectionType",
-  "collectionName": "types_of_packagings",
+  "collectionName": "type_of_packagings",
   "info": {
-    "singularName": "types-of-packaging",
-    "pluralName": "types-of-packagings",
-    "displayName": "TypesOfPackaging",
-    "description": ""
+    "singularName": "type-of-packaging",
+    "pluralName": "type-of-packagings",
+    "displayName": "TypeOfPackaging"
   },
   "options": {
     "draftAndPublish": true
@@ -17,28 +16,28 @@
   },
   "attributes": {
     "value": {
+      "type": "string",
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       },
-      "type": "string",
-      "unique": true
+      "required": true
     },
     "characteristics": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::characteristic.characteristic",
-      "mappedBy": "types_of_packaging"
+      "mappedBy": "type_of_packaging"
     },
     "title": {
+      "type": "string",
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       },
-      "type": "string",
-      "unique": true
+      "required": true
     }
   }
 }

@@ -23,12 +23,12 @@
             "mappedBy": "characteristic"
         },
         "titleOfProductCard": {
+            "type": "string",
             "pluginOptions": {
                 "i18n": {
                     "localized": true
                 }
             },
-            "type": "string",
             "unique": true
         },
         "class_of_feed": {
@@ -73,12 +73,6 @@
             "target": "api::special-dietary-need.special-dietary-need",
             "mappedBy": "characteristics"
         },
-        "types_of_packaging": {
-            "type": "relation",
-            "relation": "manyToOne",
-            "target": "api::types-of-packaging.types-of-packaging",
-            "inversedBy": "characteristics"
-        },
         "appointment_of_veterinary_diets": {
             "type": "relation",
             "relation": "manyToMany",
@@ -95,6 +89,12 @@
             "type": "relation",
             "relation": "manyToOne",
             "target": "api::type-of-canned-food.type-of-canned-food",
+            "inversedBy": "characteristics"
+        },
+        "type_of_packaging": {
+            "type": "relation",
+            "relation": "manyToOne",
+            "target": "api::type-of-packaging.type-of-packaging",
             "inversedBy": "characteristics"
         }
     }
