@@ -9,26 +9,25 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
         try {
             console.log(11111111111111);
-            const rawFilters = ctx.query.filters;
-            console.log("rawFilters", rawFilters);
+            const { subCategory, filter } = ctx.request.query;
+            if (!subCategory) {
+                return ctx.badRequest("Missing 'subCategory' query param");
+            }
             let parsedFilters = {};
-            if (typeof rawFilters === "string") {
+            if (filter && typeof filter === "string") {
                 try {
-                    // Декодуємо та парсимо JSON
-                    parsedFilters = JSON.parse(decodeURIComponent(rawFilters));
+                    parsedFilters = JSON.parse(decodeURIComponent(filter));
                 }
                 catch (e) {
-                    console.error("Failed to parse filters:", e);
-                    return ctx.badRequest("Invalid filters format");
+                    console.error("Invalid 'filter' param:", e);
+                    return ctx.badRequest("Invalid filter format");
                 }
             }
-            console.log("Parsed filters:", parsedFilters);
-            // const subcatHref = "dry-food-for-dogs";
-            // const subcatHref = "therapeutic-food-for-dogs";
-            const subcatHref = "cans-for-dogs";
+            console.log("subCategory:", subCategory);
+            console.log("parsedFilters:", parsedFilters);
             // ======================================
             const whereClauses = [];
-            const params = [subcatHref]; // Перший параметр
+            const params = [subCategory]; // Перший параметр
             // Обов'язкова умова по підкатегорії (використовуємо ? замість $1)
             whereClauses.push(`
   EXISTS (
@@ -218,7 +217,7 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
   `);
                 params.push(...parsedFilters.type_of_canned_food);
             }
-            // Types of Packaging
+            // Type of Packaging
             if ((_m = parsedFilters.type_of_packaging) === null || _m === void 0 ? void 0 : _m.length) {
                 const packagingPlaceholders = parsedFilters.type_of_packaging
                     .map(() => "?")
@@ -255,19 +254,21 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
 
           -- 1. Бренди
           SELECT 
-            b.title AS label,
+            b.title AS title,
+            b.value AS value,
             COUNT(fp.id) AS count,
             'brand' AS group_by_type
           FROM filtered_products fp
           JOIN product_cards_brand_lnk pclnk ON pclnk.product_card_id = fp.id
           JOIN brands b ON b.id = pclnk.brand_id
-          GROUP BY b.title
+          GROUP BY b.title, b.value
 
           UNION ALL
 
           -- 2. Країни
           SELECT 
-            fp.country AS label,
+            fp.country AS title,
+            fp.country AS value,
             COUNT(fp.id) AS count,
             'country' AS group_by_type
           FROM filtered_products fp
@@ -275,9 +276,39 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
 
           UNION ALL
 
-          -- 3. Клас корму (class_of_feed)
+          -- 3a. Мінімальна ціна 
           SELECT 
-            cof.value AS label,
+            'min_price' AS title,
+            'min_price' AS value,
+            MIN(ps.price) AS count,
+            'price' AS group_by_type
+          FROM filtered_products fp
+          JOIN product_sub_cards_product_card_lnk lnk ON lnk.product_card_id = fp.id
+          JOIN product_sub_cards ps ON ps.id = lnk.product_sub_card_id
+          WHERE ps.in_stock = true
+          HAVING MIN(ps.price) IS NOT NULL
+
+          UNION ALL
+
+          -- 3b. Максимальна ціна
+          SELECT 
+            'max_price' AS title,
+            'max_price' AS value,
+            MAX(ps.price) AS count,
+            'price' AS group_by_type
+          FROM filtered_products fp
+          JOIN product_sub_cards_product_card_lnk lnk ON lnk.product_card_id = fp.id
+          JOIN product_sub_cards ps ON ps.id = lnk.product_sub_card_id
+          WHERE ps.in_stock = true
+          HAVING MAX(ps.price) IS NOT NULL
+
+          UNION ALL
+
+
+          -- 4. Клас корму (class_of_feed)
+          SELECT 
+            cof.title AS title,
+            cof.value AS value,
             COUNT(DISTINCT fp.id) AS count,
             'class_of_feed' AS group_by_type
           FROM filtered_products fp
@@ -285,13 +316,14 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
           JOIN characteristics c ON c.id = cclnk.characteristic_id
           JOIN characteristics_class_of_feed_lnk cflnk ON cflnk.characteristic_id = c.id
           JOIN class_of_feeds cof ON cof.id = cflnk.class_of_feed_id
-          GROUP BY cof.value
+          GROUP BY cof.title, cof.value
 
           UNION ALL
 
-          -- 4. Вік собак (age_of_dogs)
+          -- 5. Вік собак (age_of_dogs)
           SELECT 
-            ad.value AS label,
+            ad.title AS title,
+            ad.value AS value,
             COUNT(DISTINCT fp.id) AS count,
             'age_of_dogs' AS group_by_type
           FROM filtered_products fp
@@ -299,13 +331,14 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
           JOIN characteristics c ON c.id = cclnk.characteristic_id
           JOIN age_of_dogs_characteristics_lnk adcl ON adcl.characteristic_id = c.id
           JOIN age_of_dogs ad ON ad.id = adcl.age_of_dog_id
-          GROUP BY ad.value
+          GROUP BY ad.title, ad.value
 
           UNION ALL
 
-          -- 5. Породи собак (breed_of_dogs)
+          -- 6. Породи собак (breed_of_dogs)
           SELECT 
-            bd.value AS label,
+            bd.title AS title,
+            bd.value AS value,
             COUNT(DISTINCT fp.id) AS count,
             'breed_of_dogs' AS group_by_type
           FROM filtered_products fp
@@ -313,13 +346,14 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
           JOIN characteristics c ON c.id = cclnk.characteristic_id
           JOIN breed_of_dogs_characteristics_lnk bdcl ON bdcl.characteristic_id = c.id
           JOIN breed_of_dogs bd ON bd.id = bdcl.breed_of_dog_id
-          GROUP BY bd.value
+          GROUP BY bd.title, bd.value
 
           UNION ALL
 
-          -- 6. Розміри порід (breed_sizes)
+          -- 7. Розміри порід (breed_sizes)
           SELECT 
-            bs.value AS label,
+            bs.title AS title,
+            bs.value AS value,
             COUNT(DISTINCT fp.id) AS count,
             'breed_sizes' AS group_by_type
           FROM filtered_products fp
@@ -327,13 +361,14 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
           JOIN characteristics c ON c.id = cclnk.characteristic_id
           JOIN breed_sizes_characteristics_lnk bscl ON bscl.characteristic_id = c.id
           JOIN breed_sizes bs ON bs.id = bscl.breed_size_id
-          GROUP BY bs.value
+          GROUP BY bs.title, bs.value
 
           UNION ALL
 
-          -- 7. Джерела протеїну (source_of_protein_in_feeds)
+          -- 8. Джерела протеїну (source_of_protein_in_feeds)
           SELECT 
-            sp.value AS label,
+            sp.title AS title,
+            sp.value AS value,
             COUNT(DISTINCT fp.id) AS count,
             'source_of_protein_in_feeds' AS group_by_type
           FROM filtered_products fp
@@ -341,13 +376,14 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
           JOIN characteristics c ON c.id = cclnk.characteristic_id
           JOIN source_of_protein_in_feeds_characteristics_lnk spcl ON spcl.characteristic_id = c.id
           JOIN source_of_protein_in_feeds sp ON sp.id = spcl.source_of_protein_in_feed_id
-          GROUP BY sp.value
+          GROUP BY sp.title, sp.value
 
           UNION ALL
 
-          -- 8. Особливі потреби (special_dietary_needs)
+          -- 9. Особливі потреби (special_dietary_needs)
           SELECT 
-            sd.value AS label,
+            sd.title AS title,
+            sd.value AS value,
             COUNT(DISTINCT fp.id) AS count,
             'special_dietary_needs' AS group_by_type
           FROM filtered_products fp
@@ -355,13 +391,14 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
           JOIN characteristics c ON c.id = cclnk.characteristic_id
           JOIN special_dietary_needs_characteristics_lnk sdcl ON sdcl.characteristic_id = c.id
           JOIN special_dietary_needs sd ON sd.id = sdcl.special_dietary_need_id
-          GROUP BY sd.value
+          GROUP BY sd.title, sd.value
 
           UNION ALL
 
-          -- 9. Призначення ветеринарної дієти (appointment_of_veterinary_diets)
+          -- 10. Призначення ветеринарної дієти (appointment_of_veterinary_diets)
           SELECT 
-            avd.value AS label,
+            avd.title AS title,
+            avd.value AS value,
             COUNT(DISTINCT fp.id) AS count,
             'appointment_of_veterinary_diets' AS group_by_type
           FROM filtered_products fp
@@ -369,51 +406,14 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
           JOIN characteristics c ON c.id = cclnk.characteristic_id
           JOIN appointment_of_veterinary_diets_characteristics_lnk avdcl ON avdcl.characteristic_id = c.id
           JOIN appointment_of_veterinary_diets avd ON avd.id = avdcl.appointment_of_veterinary_diet_id
-          GROUP BY avd.value
+          GROUP BY avd.title, avd.value
 
           UNION ALL
 
-          -- 10. Мінімальна ціна
+          -- 11. Типи пакування (type_of_packaging)
           SELECT 
-            'min_price' AS label,
-            MIN(ps.price) AS count,
-            'price' AS group_by_type
-          FROM filtered_products fp
-          JOIN product_sub_cards_product_card_lnk lnk ON lnk.product_card_id = fp.id
-          JOIN product_sub_cards ps ON ps.id = lnk.product_sub_card_id
-          WHERE ps.in_stock = true
-
-          UNION ALL
-
-          -- 11. Максимальна ціна
-          SELECT 
-            'max_price' AS label,
-            MAX(ps.price) AS count,
-            'price' AS group_by_type
-          FROM filtered_products fp
-          JOIN product_sub_cards_product_card_lnk lnk ON lnk.product_card_id = fp.id
-          JOIN product_sub_cards ps ON ps.id = lnk.product_sub_card_id
-          WHERE ps.in_stock = true
-
-          UNION ALL
-
-          -- 12. Тип консервованого корму (type_of_canned_food)
-          SELECT 
-            tcf.value AS label,
-            COUNT(DISTINCT fp.id) AS count,
-            'type_of_canned_food' AS group_by_type
-          FROM filtered_products fp
-          JOIN product_cards_characteristic_lnk cclnk ON cclnk.product_card_id = fp.id
-          JOIN characteristics c ON c.id = cclnk.characteristic_id
-          JOIN characteristics_type_of_canned_food_lnk ctcf ON ctcf.characteristic_id = c.id
-          JOIN type_of_canned_foods tcf ON tcf.id = ctcf.type_of_canned_food_id
-          GROUP BY tcf.value
-
-          UNION ALL
-
-          -- 13. Типи пакування (type_of_packaging)
-          SELECT 
-            top.value AS label,
+            top.title AS title,
+            top.value AS value,
             COUNT(DISTINCT fp.id) AS count,
             'type_of_packaging' AS group_by_type
           FROM filtered_products fp
@@ -421,8 +421,22 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
           JOIN characteristics c ON c.id = cclnk.characteristic_id
           JOIN characteristics_type_of_packaging_lnk ctop ON ctop.characteristic_id = c.id
           JOIN type_of_packagings top ON top.id = ctop.type_of_packaging_id
-          GROUP BY top.value;
-          `, params);
+          GROUP BY top.title, top.value
+
+          UNION ALL
+
+          -- 12. Тип консервованого корму (type_of_canned_food)
+          SELECT 
+            tcf.title AS title,
+            tcf.value AS value,
+            COUNT(DISTINCT fp.id) AS count,
+            'type_of_canned_food' AS group_by_type
+          FROM filtered_products fp
+          JOIN product_cards_characteristic_lnk cclnk ON cclnk.product_card_id = fp.id
+          JOIN characteristics c ON c.id = cclnk.characteristic_id
+          JOIN characteristics_type_of_canned_food_lnk ctcf ON ctcf.characteristic_id = c.id
+          JOIN type_of_canned_foods tcf ON tcf.id = ctcf.type_of_canned_food_id
+          GROUP BY tcf.title, tcf.value;`, params);
             const data = result.rows;
             ctx.body = data;
         }
