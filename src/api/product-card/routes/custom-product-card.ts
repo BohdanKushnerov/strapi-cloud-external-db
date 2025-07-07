@@ -9,5 +9,14 @@ export default {
         policies: [],
       },
     },
+    {
+      method: "GET",
+      path: "/product-cards/custom-pagination/:categoryHref",
+      handler: "product-card.customPagination",
+      config: {
+        auth: false,
+        policies: [],
+      },
+    },
   ],
 };
