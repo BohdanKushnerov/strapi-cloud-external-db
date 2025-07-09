@@ -779,8 +779,8 @@ export default factories.createCoreController(
         ? " AND " + whereClauses.join(" AND ")
         : "";
 
-        console.log("whereSQL characteristics", whereSQL);
-        console.log("filterParams characteristics", filterParams);
+      console.log("whereSQL characteristics", whereSQL);
+      console.log("filterParams characteristics", filterParams);
 
       // Логи для дебагу
       // console.log("whereSQL:", whereSQL);
@@ -793,54 +793,84 @@ export default factories.createCoreController(
       // console.log("dataParams:", dataParams);
 
       const dataQuery = `
-    SELECT
-      pc.document_id,
-      pc.title,
-      pc.country,
-      pc.promotion,
-      pc.promotion_quantity,
-      pc.product_url,
-      pc.eco,
-      pc.top_seller,
-      pc.published_at,
-      (
-        SELECT json_agg(sc ORDER BY sc."inStock" DESC, sc."size" ASC)
-        FROM (
-          SELECT
-            ps2.document_id,
-            ps2.size,
-            ps2.price,
-            ps2.markdown,
-            ps2.title,
-            ps2.old_price AS "oldPrice",
-            ps2.in_stock AS "inStock"
-          FROM product_sub_cards ps2
-          JOIN product_sub_cards_product_card_lnk lnk2 ON lnk2.product_sub_card_id = ps2.id
-          WHERE lnk2.product_card_id = pc.id
-        ) sc
-      ) AS product_sub_cards,
-      (
-        SELECT json_agg(json_build_object(
-          'url', f.url,
-          'height', f.height,
-          'width', f.width
-        ) ORDER BY frm."order" ASC)
-        FROM files_related_mph frm
-        JOIN files f ON f.id = frm.file_id
-        WHERE frm.related_id = pc.id
-          AND frm.related_type = 'api::product-card.product-card'
-          AND frm.field = 'images'
-      ) AS images
-    FROM product_cards pc
-    LEFT JOIN product_sub_cards_product_card_lnk lnk ON lnk.product_card_id = pc.id
-    LEFT JOIN product_sub_cards ps ON ps.id = lnk.product_sub_card_id
-    WHERE pc.published_at IS NOT NULL
-      ${whereSQL}
-    GROUP BY pc.id, pc.document_id, pc.title, pc.country, pc.promotion, pc.promotion_quantity, pc.product_url, pc.eco, pc.top_seller, pc.published_at
-    ORDER BY ${sortSQL}
-    OFFSET ?
-    LIMIT ?
-  `;
+        SELECT
+          pc.document_id,
+          pc.title,
+          pc.country,
+          pc.promotion,
+          pc.promotion_quantity,
+          pc.product_url,
+          pc.eco,
+          pc.top_seller,
+          pc.published_at,
+
+          json_build_object(
+            'document_id', ascat.document_id,
+            'subcategory', ascat.subcategory,
+            'href', ascat.href
+          ) AS animal_sub_category,
+
+          (
+            SELECT json_agg(sc ORDER BY sc."inStock" DESC, sc."size" ASC)
+            FROM (
+              SELECT
+                ps2.document_id,
+                ps2.size,
+                ps2.price,
+                ps2.markdown,
+                ps2.title,
+                ps2.old_price AS "oldPrice",
+                ps2.in_stock AS "inStock"
+              FROM product_sub_cards ps2
+              JOIN product_sub_cards_product_card_lnk lnk2 ON lnk2.product_sub_card_id = ps2.id
+              WHERE lnk2.product_card_id = pc.id
+            ) sc
+          ) AS product_sub_cards,
+
+          (
+            SELECT json_agg(json_build_object(
+              'url', f.url,
+              'height', f.height,
+              'width', f.width
+            ) ORDER BY frm."order" ASC)
+            FROM files_related_mph frm
+            JOIN files f ON f.id = frm.file_id
+            WHERE frm.related_id = pc.id
+              AND frm.related_type = 'api::product-card.product-card'
+              AND frm.field = 'images'
+          ) AS images
+
+        FROM product_cards pc
+
+        LEFT JOIN product_cards_animal_sub_category_lnk lnk_cat ON lnk_cat.product_card_id = pc.id
+        LEFT JOIN animal_sub_categories ascat ON ascat.id = lnk_cat.animal_sub_category_id
+
+        LEFT JOIN product_sub_cards_product_card_lnk lnk ON lnk.product_card_id = pc.id
+        LEFT JOIN product_sub_cards ps ON ps.id = lnk.product_sub_card_id
+
+        WHERE pc.published_at IS NOT NULL
+          ${whereSQL}
+
+        GROUP BY
+          pc.id,
+          pc.document_id,
+          pc.title,
+          pc.country,
+          pc.promotion,
+          pc.promotion_quantity,
+          pc.product_url,
+          pc.eco,
+          pc.top_seller,
+          pc.published_at,
+          ascat.document_id,
+          ascat.subcategory,
+          ascat.href
+
+        ORDER BY ${sortSQL}
+        OFFSET ?
+        LIMIT ?
+      `;
+
 
       const countQuery = `
     SELECT COUNT(DISTINCT pc.id) as total
