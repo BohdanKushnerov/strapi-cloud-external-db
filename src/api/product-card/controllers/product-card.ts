@@ -10,7 +10,7 @@ export default factories.createCoreController(
   ({ strapi }) => ({
     async facets(ctx) {
       try {
-        console.log(11111111111111);
+        // console.log(11111111111111);
 
         const { subCategory, filter } = ctx.request.query;
 
@@ -287,8 +287,8 @@ export default factories.createCoreController(
             ? " AND " + whereClauses.slice(1).join(" AND ") // Пропускаємо першу умову, бо вона вже є в основному запиті
             : "";
 
-        console.log("whereSQL characteristics", whereSQL);
-        console.log("params characteristics", params);
+        // console.log("whereSQL characteristics", whereSQL);
+        // console.log("params characteristics", params);
 
         // ======================================
 
@@ -500,8 +500,8 @@ export default factories.createCoreController(
       }
     },
     async customPagination(ctx) {
-      const categoryHref = ctx.params.categoryHref;
-      const { page = 1, pageSize = 4, sort = "popular", filter } = ctx.query;
+      const categoryHref = ctx.params.categoryHref ?? null;
+      const { page = 1, pageSize = 10, sort = "popular", filter } = ctx.query;
 
       const offset = (Number(page) - 1) * Number(pageSize);
       const limit = Number(pageSize);
@@ -528,17 +528,28 @@ export default factories.createCoreController(
         }
       }
 
-      const whereClauses = [];
-      const filterParams = [categoryHref]; // параметри для WHERE без offset/limit
+      const whereClauses: string[] = [];
+      const filterParams: any[] = [];
 
-      whereClauses.push(`
-  EXISTS (
-    SELECT 1
-    FROM product_cards_animal_sub_category_lnk psc
-    JOIN animal_sub_categories subcat ON subcat.id = psc.animal_sub_category_id
-    WHERE psc.product_card_id = pc.id AND subcat.href = ?
-  )
-`);
+      if (categoryHref) {
+        whereClauses.push(`
+      EXISTS (
+        SELECT 1
+        FROM product_cards_animal_sub_category_lnk psc
+        JOIN animal_sub_categories subcat ON subcat.id = psc.animal_sub_category_id
+        WHERE psc.product_card_id = pc.id AND subcat.href = ?
+      )
+    `);
+        filterParams.push(categoryHref);
+      } else {
+        whereClauses.push(`
+      EXISTS (
+        SELECT 1
+        FROM product_cards_animal_sub_category_lnk psc
+        WHERE psc.product_card_id = pc.id
+      )
+    `);
+      }
 
       // Brand
       if (parsedFilters.brand?.length) {
@@ -779,8 +790,8 @@ export default factories.createCoreController(
         ? " AND " + whereClauses.join(" AND ")
         : "";
 
-      console.log("whereSQL characteristics", whereSQL);
-      console.log("filterParams characteristics", filterParams);
+      // console.log("whereSQL characteristics", whereSQL);
+      // console.log("filterParams characteristics", filterParams);
 
       // Логи для дебагу
       // console.log("whereSQL:", whereSQL);
@@ -870,7 +881,6 @@ export default factories.createCoreController(
         OFFSET ?
         LIMIT ?
       `;
-
 
       const countQuery = `
     SELECT COUNT(DISTINCT pc.id) as total

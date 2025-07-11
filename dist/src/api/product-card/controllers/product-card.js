@@ -8,7 +8,7 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
     async facets(ctx) {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
         try {
-            console.log(11111111111111);
+            // console.log(11111111111111);
             const { subCategory, filter } = ctx.request.query;
             if (!subCategory) {
                 return ctx.badRequest("Missing 'subCategory' query param");
@@ -238,8 +238,8 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
             const whereSQL = whereClauses.length > 1
                 ? " AND " + whereClauses.slice(1).join(" AND ") // Пропускаємо першу умову, бо вона вже є в основному запиті
                 : "";
-            console.log("whereSQL characteristics", whereSQL);
-            console.log("params characteristics", params);
+            // console.log("whereSQL characteristics", whereSQL);
+            // console.log("params characteristics", params);
             // ======================================
             const result = await strapi.db.connection.raw(`WITH filtered_products AS (
             SELECT DISTINCT pc.id, pc.country
@@ -445,9 +445,9 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
         }
     },
     async customPagination(ctx) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
-        const categoryHref = ctx.params.categoryHref;
-        const { page = 1, pageSize = 4, sort = "popular", filter } = ctx.query;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r;
+        const categoryHref = (_a = ctx.params.categoryHref) !== null && _a !== void 0 ? _a : null;
+        const { page = 1, pageSize = 10, sort = "popular", filter } = ctx.query;
         const offset = (Number(page) - 1) * Number(pageSize);
         const limit = Number(pageSize);
         const knex = strapi.db.connection;
@@ -469,17 +469,29 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
             }
         }
         const whereClauses = [];
-        const filterParams = [categoryHref]; // параметри для WHERE без offset/limit
-        whereClauses.push(`
-  EXISTS (
-    SELECT 1
-    FROM product_cards_animal_sub_category_lnk psc
-    JOIN animal_sub_categories subcat ON subcat.id = psc.animal_sub_category_id
-    WHERE psc.product_card_id = pc.id AND subcat.href = ?
-  )
-`);
+        const filterParams = [];
+        if (categoryHref) {
+            whereClauses.push(`
+      EXISTS (
+        SELECT 1
+        FROM product_cards_animal_sub_category_lnk psc
+        JOIN animal_sub_categories subcat ON subcat.id = psc.animal_sub_category_id
+        WHERE psc.product_card_id = pc.id AND subcat.href = ?
+      )
+    `);
+            filterParams.push(categoryHref);
+        }
+        else {
+            whereClauses.push(`
+      EXISTS (
+        SELECT 1
+        FROM product_cards_animal_sub_category_lnk psc
+        WHERE psc.product_card_id = pc.id
+      )
+    `);
+        }
         // Brand
-        if ((_a = parsedFilters.brand) === null || _a === void 0 ? void 0 : _a.length) {
+        if ((_b = parsedFilters.brand) === null || _b === void 0 ? void 0 : _b.length) {
             const brandPlaceholders = parsedFilters.brand
                 .map(() => "?") // Використовуємо ? замість $n
                 .join(", ");
@@ -494,7 +506,7 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
             filterParams.push(...parsedFilters.brand);
         }
         // Country
-        if ((_b = parsedFilters.country) === null || _b === void 0 ? void 0 : _b.length) {
+        if ((_c = parsedFilters.country) === null || _c === void 0 ? void 0 : _c.length) {
             const countryPlaceholders = parsedFilters.country
                 .map(() => "?")
                 .join(", ");
@@ -504,7 +516,7 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
             filterParams.push(...parsedFilters.country);
         }
         // Price (min and max)
-        if (((_c = parsedFilters.price) === null || _c === void 0 ? void 0 : _c.length) === 2 &&
+        if (((_d = parsedFilters.price) === null || _d === void 0 ? void 0 : _d.length) === 2 &&
             parsedFilters.price[0] !== "" &&
             parsedFilters.price[1] !== "") {
             const [minPrice, maxPrice] = parsedFilters.price;
@@ -521,7 +533,7 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
             filterParams.push(minPrice, maxPrice);
         }
         // Class of Feed
-        if ((_d = parsedFilters.class_of_feed) === null || _d === void 0 ? void 0 : _d.length) {
+        if ((_e = parsedFilters.class_of_feed) === null || _e === void 0 ? void 0 : _e.length) {
             const classPlaceholders = parsedFilters.class_of_feed
                 .map(() => "?")
                 .join(", ");
@@ -538,7 +550,7 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
             filterParams.push(...parsedFilters.class_of_feed);
         }
         // Age of dogs
-        if ((_e = parsedFilters.age_of_dogs) === null || _e === void 0 ? void 0 : _e.length) {
+        if ((_f = parsedFilters.age_of_dogs) === null || _f === void 0 ? void 0 : _f.length) {
             const agePlaceholders = parsedFilters.age_of_dogs
                 .map(() => "?") // Використовуємо ? замість $n
                 .join(", ");
@@ -555,7 +567,7 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
             filterParams.push(...parsedFilters.age_of_dogs);
         }
         // Breed of dogs
-        if ((_f = parsedFilters.breed_of_dogs) === null || _f === void 0 ? void 0 : _f.length) {
+        if ((_g = parsedFilters.breed_of_dogs) === null || _g === void 0 ? void 0 : _g.length) {
             const breedPlaceholders = parsedFilters.breed_of_dogs
                 .map(() => "?")
                 .join(", ");
@@ -572,7 +584,7 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
             filterParams.push(...parsedFilters.breed_of_dogs);
         }
         // Breed Sizes
-        if ((_g = parsedFilters.breed_sizes) === null || _g === void 0 ? void 0 : _g.length) {
+        if ((_h = parsedFilters.breed_sizes) === null || _h === void 0 ? void 0 : _h.length) {
             const sizePlaceholders = parsedFilters.breed_sizes
                 .map(() => "?")
                 .join(", ");
@@ -589,7 +601,7 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
             filterParams.push(...parsedFilters.breed_sizes);
         }
         // Source of Protein in Feeds
-        if ((_h = parsedFilters.source_of_protein_in_feeds) === null || _h === void 0 ? void 0 : _h.length) {
+        if ((_j = parsedFilters.source_of_protein_in_feeds) === null || _j === void 0 ? void 0 : _j.length) {
             const proteinPlaceholders = parsedFilters.source_of_protein_in_feeds
                 .map(() => "?")
                 .join(", ");
@@ -606,7 +618,7 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
             filterParams.push(...parsedFilters.source_of_protein_in_feeds);
         }
         // Special Dietary Needs
-        if ((_j = parsedFilters.special_dietary_needs) === null || _j === void 0 ? void 0 : _j.length) {
+        if ((_k = parsedFilters.special_dietary_needs) === null || _k === void 0 ? void 0 : _k.length) {
             const dietaryPlaceholders = parsedFilters.special_dietary_needs
                 .map(() => "?")
                 .join(", ");
@@ -624,7 +636,7 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
         }
         // =============================therapeutic-food-for-dogs=======================================
         // Appointment of Veterinary Diets
-        if ((_k = parsedFilters.appointment_of_veterinary_diets) === null || _k === void 0 ? void 0 : _k.length) {
+        if ((_l = parsedFilters.appointment_of_veterinary_diets) === null || _l === void 0 ? void 0 : _l.length) {
             const appointmentPlaceholders = parsedFilters.appointment_of_veterinary_diets
                 .map(() => "?")
                 .join(", ");
@@ -642,7 +654,7 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
         }
         // =============================cans-for-dogs=======================================
         // Type of Canned Food
-        if ((_l = parsedFilters.type_of_canned_food) === null || _l === void 0 ? void 0 : _l.length) {
+        if ((_m = parsedFilters.type_of_canned_food) === null || _m === void 0 ? void 0 : _m.length) {
             const cannedFoodPlaceholders = parsedFilters.type_of_canned_food
                 .map(() => "?")
                 .join(", ");
@@ -659,7 +671,7 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
             filterParams.push(...parsedFilters.type_of_canned_food);
         }
         // Type of Packaging
-        if ((_m = parsedFilters.type_of_packaging) === null || _m === void 0 ? void 0 : _m.length) {
+        if ((_o = parsedFilters.type_of_packaging) === null || _o === void 0 ? void 0 : _o.length) {
             const packagingPlaceholders = parsedFilters.type_of_packaging
                 .map(() => "?")
                 .join(", ");
@@ -678,8 +690,8 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
         const whereSQL = whereClauses.length
             ? " AND " + whereClauses.join(" AND ")
             : "";
-        console.log("whereSQL characteristics", whereSQL);
-        console.log("filterParams characteristics", filterParams);
+        // console.log("whereSQL characteristics", whereSQL);
+        // console.log("filterParams characteristics", filterParams);
         // Логи для дебагу
         // console.log("whereSQL:", whereSQL);
         // console.log("filterParams length:", filterParams.length);
@@ -777,7 +789,7 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
   `;
         // Виконуємо countQuery з filterParams (без offset і limit)
         const countResult = await knex.raw(countQuery, filterParams);
-        const total = Number(((_p = (_o = countResult.rows) === null || _o === void 0 ? void 0 : _o[0]) === null || _p === void 0 ? void 0 : _p.total) || 0);
+        const total = Number(((_q = (_p = countResult.rows) === null || _p === void 0 ? void 0 : _p[0]) === null || _q === void 0 ? void 0 : _q.total) || 0);
         // Виконуємо dataQuery з dataParams (з offset і limit)
         const dataResult = await knex.raw(dataQuery, dataParams);
         const data = dataResult.rows;
@@ -788,7 +800,7 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
     LIMIT 1
   `;
         const categoryResult = await knex.raw(categoryQuery, [categoryHref]);
-        const categoryInfo = ((_q = categoryResult.rows) === null || _q === void 0 ? void 0 : _q[0]) || null;
+        const categoryInfo = ((_r = categoryResult.rows) === null || _r === void 0 ? void 0 : _r[0]) || null;
         return {
             category: categoryInfo,
             data,

@@ -11,7 +11,7 @@ export default {
     },
     {
       method: "GET",
-      path: "/product-cards/custom-pagination/:categoryHref",
+      path: "/product-cards/custom-pagination/:categoryHref?",
       handler: "product-card.customPagination",
       config: {
         auth: false,

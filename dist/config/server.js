@@ -6,4 +6,10 @@ exports.default = ({ env }) => ({
     app: {
         keys: env.array("APP_KEYS"),
     },
+    autoReload: false,
+    settings: {
+        logger: {
+            level: "info",
+        },
+    },
 });
