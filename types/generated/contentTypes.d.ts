@@ -890,6 +890,10 @@ export interface ApiCharacteristicCharacteristic
       'api::product-card.product-card'
     >;
     publishedAt: Schema.Attribute.DateTime;
+    release_forms: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::release-form.release-form'
+    >;
     source_of_protein_in_feeds: Schema.Attribute.Relation<
       'manyToMany',
       'api::source-of-protein-in-feed.source-of-protein-in-feed'
@@ -1327,6 +1331,57 @@ export interface ApiProductSubCardProductSubCard
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+  };
+}
+
+export interface ApiReleaseFormReleaseForm extends Struct.CollectionTypeSchema {
+  collectionName: 'release_forms';
+  info: {
+    displayName: 'ReleaseForm';
+    pluralName: 'release-forms';
+    singularName: 'release-form';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    characteristics: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::characteristic.characteristic'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::release-form.release-form'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    value: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
   };
 }
 
@@ -2106,6 +2161,7 @@ declare module '@strapi/strapi' {
       'api::kind-of-treat.kind-of-treat': ApiKindOfTreatKindOfTreat;
       'api::product-card.product-card': ApiProductCardProductCard;
       'api::product-sub-card.product-sub-card': ApiProductSubCardProductSubCard;
+      'api::release-form.release-form': ApiReleaseFormReleaseForm;
       'api::section-hero-carousel.section-hero-carousel': ApiSectionHeroCarouselSectionHeroCarousel;
       'api::source-of-protein-in-feed.source-of-protein-in-feed': ApiSourceOfProteinInFeedSourceOfProteinInFeed;
       'api::special-dietary-need.special-dietary-need': ApiSpecialDietaryNeedSpecialDietaryNeed;

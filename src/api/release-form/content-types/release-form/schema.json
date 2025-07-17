@@ -1,0 +1,45 @@
+{
+  "kind": "collectionType",
+  "collectionName": "release_forms",
+  "info": {
+    "singularName": "release-form",
+    "pluralName": "release-forms",
+    "displayName": "ReleaseForm"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "value": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "required": true,
+      "unique": true
+    },
+    "characteristics": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::characteristic.characteristic",
+      "inversedBy": "release_forms"
+    },
+    "title": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "required": true,
+      "unique": true
+    }
+  }
+}

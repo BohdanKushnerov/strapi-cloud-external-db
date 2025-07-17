@@ -96,6 +96,12 @@
       "relation": "manyToOne",
       "target": "api::type-of-packaging.type-of-packaging",
       "inversedBy": "characteristics"
+    },
+    "release_forms": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::release-form.release-form",
+      "mappedBy": "characteristics"
     }
   }
 }
