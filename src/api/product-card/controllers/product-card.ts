@@ -95,6 +95,14 @@ const FILTER_CONFIG: Record<string, FilterConfig> = {
     titleField: "title",
     throughCharacteristics: true,
   },
+  release_forms: {
+    table: "release_forms",
+    linkTable: "release_forms_characteristics_lnk",
+    linkField: "release_form_id",
+    valueField: "value",
+    titleField: "title",
+    throughCharacteristics: true,
+  },
 };
 
 const SORT_MAP = {
@@ -135,6 +143,7 @@ class FilterBuilder {
         `);
       }
     }
+    return this; // Allow method chaining
   }
 
   addCountryFilter() {
@@ -143,6 +152,7 @@ class FilterBuilder {
       this.whereClauses.push(`pc.country IN (${placeholders})`);
       this.params.push(...this.parsedFilters.country);
     }
+    return this;
   }
 
   addPriceFilter() {
@@ -164,6 +174,7 @@ class FilterBuilder {
       `);
       this.params.push(minPrice, maxPrice);
     }
+    return this;
   }
 
   addConfigurableFilters() {
@@ -176,6 +187,7 @@ class FilterBuilder {
         );
       }
     });
+    return this;
   }
 
   private addConfigurableFilter(
@@ -213,11 +225,7 @@ class FilterBuilder {
   build() {
     return {
       whereSQL:
-        this.whereClauses.length > 1
-          ? " AND " + this.whereClauses.slice(1).join(" AND ")
-          : this.whereClauses.length === 1
-            ? " AND " + this.whereClauses[0]
-            : "",
+        this.whereClauses.length > 0 ? this.whereClauses.join(" AND ") : "",
       params: this.params,
     };
   }
@@ -235,7 +243,6 @@ class FacetQueryBuilder {
 
   buildFacetQueries(): string {
     const queries = [
-      // this.buildBrandQuery(),
       this.buildCountryQuery(),
       this.buildPriceQueries(),
       ...this.buildConfigurableQueries(),
@@ -300,7 +307,7 @@ class FacetQueryBuilder {
 
   private buildConfigurableQueries(): string[] {
     return Object.entries(FILTER_CONFIG).map(([filterKey, config]) => {
-      const alias = config.table.substring(0, 3); // Короткий алиас для таблицы
+      const alias = config.table.substring(0, 3); // Short table alias
 
       if (config.throughCharacteristics) {
         return `
@@ -342,7 +349,7 @@ class FacetQueryBuilder {
         JOIN product_cards_animal_sub_category_lnk psc ON psc.product_card_id = pc.id
         JOIN animal_sub_categories subcat ON subcat.id = psc.animal_sub_category_id AND subcat.href = ?
         WHERE pc.published_at IS NOT NULL
-        ${this.baseWhereSQL}
+        ${this.baseWhereSQL ? "AND " + this.baseWhereSQL : ""}
       )
       ${this.buildFacetQueries()}
     `;
@@ -364,6 +371,8 @@ const parseFilters = (filter: string): Record<string, string[]> => {
 };
 
 const buildPaginationQueries = (whereSQL: string, sortSQL: string) => {
+  const whereClause = whereSQL ? `AND ${whereSQL}` : "";
+
   const dataQuery = `
     SELECT
       pc.document_id,
@@ -421,7 +430,7 @@ const buildPaginationQueries = (whereSQL: string, sortSQL: string) => {
     LEFT JOIN product_sub_cards ps ON ps.id = lnk.product_sub_card_id
 
     WHERE pc.published_at IS NOT NULL
-      ${whereSQL}
+      ${whereClause}
 
     GROUP BY
       pc.id,
@@ -448,9 +457,9 @@ const buildPaginationQueries = (whereSQL: string, sortSQL: string) => {
     FROM product_cards pc
     LEFT JOIN product_sub_cards_product_card_lnk lnk ON lnk.product_card_id = pc.id
     LEFT JOIN product_sub_cards ps ON ps.id = lnk.product_sub_card_id
-    WHERE ps.in_stock = true
-      AND pc.published_at IS NOT NULL
-      ${whereSQL}
+    WHERE pc.published_at IS NOT NULL
+      AND ps.in_stock = true
+      ${whereClause}
   `;
 
   const categoryQuery = `
@@ -476,8 +485,6 @@ export default factories.createCoreController(
 
         const parsedFilters = parseFilters(filter as string);
 
-        console.log("parsedFilters", parsedFilters);
-
         const filterBuilder = new FilterBuilder(parsedFilters, false);
         filterBuilder.addCountryFilter();
         filterBuilder.addPriceFilter();
@@ -486,16 +493,17 @@ export default factories.createCoreController(
         const { whereSQL, params } = filterBuilder.build();
         const queryParams = [subCategory, ...params];
 
-        // console.log("subCategory", subCategory);
-        // console.log("...params", ...params);
-
         const facetBuilder = new FacetQueryBuilder(whereSQL, queryParams);
         const query = facetBuilder.buildFullQuery(subCategory as string);
-        console.log("query", query);
+
         const result = await strapi.db.connection.raw(query, queryParams);
         ctx.body = result.rows;
       } catch (error) {
-        ctx.throw(500, error);
+        console.error("Error in facets:", error);
+        ctx.throw(
+          500,
+          error instanceof Error ? error.message : "Internal server error"
+        );
       }
     },
 
@@ -521,17 +529,18 @@ export default factories.createCoreController(
 
         const queries = buildPaginationQueries(whereSQL, sortSQL);
 
+        // Prepare all parameters in the correct order
+        const dataParams = [...filterParams, offset, limit];
+        const countParams = [...filterParams];
+        const categoryParams = categoryHref ? [categoryHref] : [];
+
         // Execute queries
         const [dataResult, countResult, categoryResult] = await Promise.all([
-          strapi.db.connection.raw(queries.dataQuery, [
-            ...filterParams,
-            offset,
-            limit,
-          ]),
-          strapi.db.connection.raw(queries.countQuery, filterParams),
+          strapi.db.connection.raw(queries.dataQuery, dataParams),
+          strapi.db.connection.raw(queries.countQuery, countParams),
           categoryHref
-            ? strapi.db.connection.raw(queries.categoryQuery, [categoryHref])
-            : null,
+            ? strapi.db.connection.raw(queries.categoryQuery, categoryParams)
+            : Promise.resolve({ rows: [null] }),
         ]);
 
         const data = dataResult.rows;
@@ -549,7 +558,11 @@ export default factories.createCoreController(
           },
         };
       } catch (error) {
-        ctx.throw(500, error);
+        console.error("Error in customPagination:", error);
+        ctx.throw(
+          500,
+          error instanceof Error ? error.message : "Internal server error"
+        );
       }
     },
   })
