@@ -885,13 +885,17 @@ export interface ApiCharacteristicCharacteristic
       'oneToMany',
       'api::characteristic.characteristic'
     >;
+    parasite_protection_types: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::parasite-protection-type.parasite-protection-type'
+    >;
     product_card: Schema.Attribute.Relation<
       'oneToOne',
       'api::product-card.product-card'
     >;
     publishedAt: Schema.Attribute.DateTime;
-    release_forms: Schema.Attribute.Relation<
-      'manyToMany',
+    release_form: Schema.Attribute.Relation<
+      'manyToOne',
       'api::release-form.release-form'
     >;
     source_of_protein_in_feeds: Schema.Attribute.Relation<
@@ -1116,6 +1120,58 @@ export interface ApiKindOfTreatKindOfTreat extends Struct.CollectionTypeSchema {
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     value: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+  };
+}
+
+export interface ApiParasiteProtectionTypeParasiteProtectionType
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'parasite_protection_types';
+  info: {
+    displayName: 'ParasiteProtectionType';
+    pluralName: 'parasite-protection-types';
+    singularName: 'parasite-protection-type';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    characteristics: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::characteristic.characteristic'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::parasite-protection-type.parasite-protection-type'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    value: Schema.Attribute.String &
+      Schema.Attribute.Required &
       Schema.Attribute.Unique &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -1351,7 +1407,7 @@ export interface ApiReleaseFormReleaseForm extends Struct.CollectionTypeSchema {
   };
   attributes: {
     characteristics: Schema.Attribute.Relation<
-      'manyToMany',
+      'oneToMany',
       'api::characteristic.characteristic'
     >;
     createdAt: Schema.Attribute.DateTime;
@@ -2159,6 +2215,7 @@ declare module '@strapi/strapi' {
       'api::country.country': ApiCountryCountry;
       'api::form-of-feed-release.form-of-feed-release': ApiFormOfFeedReleaseFormOfFeedRelease;
       'api::kind-of-treat.kind-of-treat': ApiKindOfTreatKindOfTreat;
+      'api::parasite-protection-type.parasite-protection-type': ApiParasiteProtectionTypeParasiteProtectionType;
       'api::product-card.product-card': ApiProductCardProductCard;
       'api::product-sub-card.product-sub-card': ApiProductSubCardProductSubCard;
       'api::release-form.release-form': ApiReleaseFormReleaseForm;

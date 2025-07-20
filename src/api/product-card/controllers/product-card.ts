@@ -95,10 +95,18 @@ const FILTER_CONFIG: Record<string, FilterConfig> = {
     titleField: "title",
     throughCharacteristics: true,
   },
-  release_forms: {
+  release_form: {
     table: "release_forms",
-    linkTable: "release_forms_characteristics_lnk",
+    linkTable: "characteristics_release_form_lnk",
     linkField: "release_form_id",
+    valueField: "value",
+    titleField: "title",
+    throughCharacteristics: true,
+  },
+  parasite_protection_types: {
+    table: "parasite_protection_types",
+    linkTable: "parasite_protection_types_characteristics_lnk",
+    linkField: "parasite_protection_type_id",
     valueField: "value",
     titleField: "title",
     throughCharacteristics: true,

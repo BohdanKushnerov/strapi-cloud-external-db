@@ -1,10 +1,10 @@
 {
   "kind": "collectionType",
-  "collectionName": "release_forms",
+  "collectionName": "parasite_protection_types",
   "info": {
-    "singularName": "release-form",
-    "pluralName": "release-forms",
-    "displayName": "ReleaseForm"
+    "singularName": "parasite-protection-type",
+    "pluralName": "parasite-protection-types",
+    "displayName": "ParasiteProtectionType"
   },
   "options": {
     "draftAndPublish": true
@@ -27,9 +27,9 @@
     },
     "characteristics": {
       "type": "relation",
-      "relation": "oneToMany",
+      "relation": "manyToMany",
       "target": "api::characteristic.characteristic",
-      "mappedBy": "release_form"
+      "inversedBy": "parasite_protection_types"
     },
     "title": {
       "type": "string",

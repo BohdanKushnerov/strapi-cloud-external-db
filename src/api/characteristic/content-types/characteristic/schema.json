@@ -97,10 +97,16 @@
       "target": "api::type-of-packaging.type-of-packaging",
       "inversedBy": "characteristics"
     },
-    "release_forms": {
+    "release_form": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::release-form.release-form",
+      "inversedBy": "characteristics"
+    },
+    "parasite_protection_types": {
       "type": "relation",
       "relation": "manyToMany",
-      "target": "api::release-form.release-form",
+      "target": "api::parasite-protection-type.parasite-protection-type",
       "mappedBy": "characteristics"
     }
   }
