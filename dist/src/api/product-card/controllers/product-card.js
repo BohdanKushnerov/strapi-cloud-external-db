@@ -100,6 +100,22 @@ const FILTER_CONFIG = {
         titleField: "title",
         throughCharacteristics: true,
     },
+    main_active_ingredients: {
+        table: "main_active_ingredients",
+        linkTable: "main_active_ingredients_characteristics_lnk",
+        linkField: "main_active_ingredient_id",
+        valueField: "value",
+        titleField: "title",
+        throughCharacteristics: true,
+    },
+    type_of_parasite: {
+        table: "type_of_parasites",
+        linkTable: "characteristics_type_of_parasite_lnk",
+        linkField: "type_of_parasite_id",
+        valueField: "value",
+        titleField: "title",
+        throughCharacteristics: true,
+    },
 };
 const SORT_MAP = {
     popular: "pc.created_at ASC",

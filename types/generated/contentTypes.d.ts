@@ -885,6 +885,10 @@ export interface ApiCharacteristicCharacteristic
       'oneToMany',
       'api::characteristic.characteristic'
     >;
+    main_active_ingredients: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::main-active-ingredient.main-active-ingredient'
+    >;
     parasite_protection_types: Schema.Attribute.Relation<
       'manyToMany',
       'api::parasite-protection-type.parasite-protection-type'
@@ -920,6 +924,10 @@ export interface ApiCharacteristicCharacteristic
     type_of_packaging: Schema.Attribute.Relation<
       'manyToOne',
       'api::type-of-packaging.type-of-packaging'
+    >;
+    type_of_parasite: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::type-of-parasite.type-of-parasite'
     >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -1120,6 +1128,58 @@ export interface ApiKindOfTreatKindOfTreat extends Struct.CollectionTypeSchema {
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     value: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+  };
+}
+
+export interface ApiMainActiveIngredientMainActiveIngredient
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'main_active_ingredients';
+  info: {
+    displayName: 'MainActiveIngredient';
+    pluralName: 'main-active-ingredients';
+    singularName: 'main-active-ingredient';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    characteristics: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::characteristic.characteristic'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::main-active-ingredient.main-active-ingredient'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    value: Schema.Attribute.String &
+      Schema.Attribute.Required &
       Schema.Attribute.Unique &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -1692,6 +1752,58 @@ export interface ApiTypeOfPackagingTypeOfPackaging
   };
 }
 
+export interface ApiTypeOfParasiteTypeOfParasite
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'type_of_parasites';
+  info: {
+    displayName: 'TypeOfParasite';
+    pluralName: 'type-of-parasites';
+    singularName: 'type-of-parasite';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    characteristics: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::characteristic.characteristic'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::type-of-parasite.type-of-parasite'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    value: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+  };
+}
+
 export interface PluginContentReleasesRelease
   extends Struct.CollectionTypeSchema {
   collectionName: 'strapi_releases';
@@ -2215,6 +2327,7 @@ declare module '@strapi/strapi' {
       'api::country.country': ApiCountryCountry;
       'api::form-of-feed-release.form-of-feed-release': ApiFormOfFeedReleaseFormOfFeedRelease;
       'api::kind-of-treat.kind-of-treat': ApiKindOfTreatKindOfTreat;
+      'api::main-active-ingredient.main-active-ingredient': ApiMainActiveIngredientMainActiveIngredient;
       'api::parasite-protection-type.parasite-protection-type': ApiParasiteProtectionTypeParasiteProtectionType;
       'api::product-card.product-card': ApiProductCardProductCard;
       'api::product-sub-card.product-sub-card': ApiProductSubCardProductSubCard;
@@ -2224,6 +2337,7 @@ declare module '@strapi/strapi' {
       'api::special-dietary-need.special-dietary-need': ApiSpecialDietaryNeedSpecialDietaryNeed;
       'api::type-of-canned-food.type-of-canned-food': ApiTypeOfCannedFoodTypeOfCannedFood;
       'api::type-of-packaging.type-of-packaging': ApiTypeOfPackagingTypeOfPackaging;
+      'api::type-of-parasite.type-of-parasite': ApiTypeOfParasiteTypeOfParasite;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

@@ -1,10 +1,10 @@
 {
   "kind": "collectionType",
-  "collectionName": "parasite_protection_types",
+  "collectionName": "main_active_ingredients",
   "info": {
-    "singularName": "parasite-protection-type",
-    "pluralName": "parasite-protection-types",
-    "displayName": "ParasiteProtectionType"
+    "singularName": "main-active-ingredient",
+    "pluralName": "main-active-ingredients",
+    "displayName": "MainActiveIngredient"
   },
   "options": {
     "draftAndPublish": true
@@ -25,6 +25,12 @@
       "required": true,
       "unique": true
     },
+    "characteristics": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::characteristic.characteristic",
+      "inversedBy": "main_active_ingredients"
+    },
     "value": {
       "type": "string",
       "pluginOptions": {
@@ -34,12 +40,6 @@
       },
       "required": true,
       "unique": true
-    },
-    "characteristics": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::characteristic.characteristic",
-      "inversedBy": "parasite_protection_types"
     }
   }
 }

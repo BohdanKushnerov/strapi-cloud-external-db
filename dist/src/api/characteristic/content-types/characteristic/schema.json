@@ -108,6 +108,18 @@
             "relation": "manyToMany",
             "target": "api::parasite-protection-type.parasite-protection-type",
             "mappedBy": "characteristics"
+        },
+        "main_active_ingredients": {
+            "type": "relation",
+            "relation": "manyToMany",
+            "target": "api::main-active-ingredient.main-active-ingredient",
+            "mappedBy": "characteristics"
+        },
+        "type_of_parasite": {
+            "type": "relation",
+            "relation": "manyToOne",
+            "target": "api::type-of-parasite.type-of-parasite",
+            "inversedBy": "characteristics"
         }
     }
 }
