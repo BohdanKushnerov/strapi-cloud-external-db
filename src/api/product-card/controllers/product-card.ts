@@ -127,6 +127,22 @@ const FILTER_CONFIG: Record<string, FilterConfig> = {
     titleField: "title",
     throughCharacteristics: true,
   },
+  approved_usages: {
+    table: "approved_usages",
+    linkTable: "approved_usages_characteristics_lnk",
+    linkField: "approved_usage_id",
+    valueField: "value",
+    titleField: "title",
+    throughCharacteristics: true,
+  },
+  type_of_application: {
+    table: "type_of_applications",
+    linkTable: "characteristics_type_of_application_lnk",
+    linkField: "type_of_application_id",
+    valueField: "value",
+    titleField: "title",
+    throughCharacteristics: true,
+  },
 };
 
 const SORT_MAP = {

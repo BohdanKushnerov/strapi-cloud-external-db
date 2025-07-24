@@ -120,6 +120,18 @@
       "relation": "manyToOne",
       "target": "api::type-of-parasite.type-of-parasite",
       "inversedBy": "characteristics"
+    },
+    "approved_usages": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::approved-usage.approved-usage",
+      "mappedBy": "characteristics"
+    },
+    "type_of_application": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::type-of-application.type-of-application",
+      "inversedBy": "characteristics"
     }
   }
 }
