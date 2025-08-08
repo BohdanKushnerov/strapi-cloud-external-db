@@ -132,6 +132,18 @@
             "relation": "manyToOne",
             "target": "api::type-of-application.type-of-application",
             "inversedBy": "characteristics"
+        },
+        "age_of_cats": {
+            "type": "relation",
+            "relation": "manyToMany",
+            "target": "api::age-of-cat.age-of-cat",
+            "mappedBy": "characteristics"
+        },
+        "type_of_cat_foods": {
+            "type": "relation",
+            "relation": "manyToMany",
+            "target": "api::type-of-cat-food.type-of-cat-food",
+            "mappedBy": "characteristics"
         }
     }
 }

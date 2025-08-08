@@ -373,6 +373,57 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiAgeOfCatAgeOfCat extends Struct.CollectionTypeSchema {
+  collectionName: 'age_of_cats';
+  info: {
+    displayName: 'AgeOfCat';
+    pluralName: 'age-of-cats';
+    singularName: 'age-of-cat';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    characteristics: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::characteristic.characteristic'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::age-of-cat.age-of-cat'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    value: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+  };
+}
+
 export interface ApiAgeOfDogAgeOfDog extends Struct.CollectionTypeSchema {
   collectionName: 'age_of_dogs';
   info: {
@@ -901,6 +952,10 @@ export interface ApiCharacteristicCharacteristic
     };
   };
   attributes: {
+    age_of_cats: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::age-of-cat.age-of-cat'
+    >;
     age_of_dogs: Schema.Attribute.Relation<
       'manyToMany',
       'api::age-of-dog.age-of-dog'
@@ -980,6 +1035,10 @@ export interface ApiCharacteristicCharacteristic
     type_of_canned_food: Schema.Attribute.Relation<
       'manyToOne',
       'api::type-of-canned-food.type-of-canned-food'
+    >;
+    type_of_cat_foods: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::type-of-cat-food.type-of-cat-food'
     >;
     type_of_packaging: Schema.Attribute.Relation<
       'manyToOne',
@@ -1814,6 +1873,58 @@ export interface ApiTypeOfCannedFoodTypeOfCannedFood
   };
 }
 
+export interface ApiTypeOfCatFoodTypeOfCatFood
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'type_of_cat_foods';
+  info: {
+    displayName: 'TypeOfCatFood';
+    pluralName: 'type-of-cat-foods';
+    singularName: 'type-of-cat-food';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    characteristics: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::characteristic.characteristic'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::type-of-cat-food.type-of-cat-food'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    value: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+  };
+}
+
 export interface ApiTypeOfPackagingTypeOfPackaging
   extends Struct.CollectionTypeSchema {
   collectionName: 'type_of_packagings';
@@ -2425,6 +2536,7 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::age-of-cat.age-of-cat': ApiAgeOfCatAgeOfCat;
       'api::age-of-dog.age-of-dog': ApiAgeOfDogAgeOfDog;
       'api::animal-category.animal-category': ApiAnimalCategoryAnimalCategory;
       'api::animal-sub-category.animal-sub-category': ApiAnimalSubCategoryAnimalSubCategory;
@@ -2450,6 +2562,7 @@ declare module '@strapi/strapi' {
       'api::special-dietary-need.special-dietary-need': ApiSpecialDietaryNeedSpecialDietaryNeed;
       'api::type-of-application.type-of-application': ApiTypeOfApplicationTypeOfApplication;
       'api::type-of-canned-food.type-of-canned-food': ApiTypeOfCannedFoodTypeOfCannedFood;
+      'api::type-of-cat-food.type-of-cat-food': ApiTypeOfCatFoodTypeOfCatFood;
       'api::type-of-packaging.type-of-packaging': ApiTypeOfPackagingTypeOfPackaging;
       'api::type-of-parasite.type-of-parasite': ApiTypeOfParasiteTypeOfParasite;
       'plugin::content-releases.release': PluginContentReleasesRelease;

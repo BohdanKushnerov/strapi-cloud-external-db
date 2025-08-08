@@ -1,0 +1,45 @@
+{
+  "kind": "collectionType",
+  "collectionName": "type_of_cat_foods",
+  "info": {
+    "singularName": "type-of-cat-food",
+    "pluralName": "type-of-cat-foods",
+    "displayName": "TypeOfCatFood"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "value": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "required": true,
+      "unique": true
+    },
+    "characteristics": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::characteristic.characteristic",
+      "inversedBy": "type_of_cat_foods"
+    },
+    "title": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "required": true,
+      "unique": true
+    }
+  }
+}
