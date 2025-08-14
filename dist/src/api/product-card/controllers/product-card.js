@@ -44,6 +44,14 @@ const FILTER_CONFIG = {
         titleField: "title",
         throughCharacteristics: true,
     },
+    breed_of_cats: {
+        table: "breed_of_cats",
+        linkTable: "breed_of_cats_characteristics_lnk",
+        linkField: "breed_of_cat_id",
+        valueField: "value",
+        titleField: "title",
+        throughCharacteristics: true,
+    },
     breed_sizes: {
         table: "breed_sizes",
         linkTable: "breed_sizes_characteristics_lnk",

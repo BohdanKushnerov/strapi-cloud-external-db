@@ -790,6 +790,57 @@ export interface ApiBrandBrand extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiBreedOfCatBreedOfCat extends Struct.CollectionTypeSchema {
+  collectionName: 'breed_of_cats';
+  info: {
+    displayName: 'BreedOfCat';
+    pluralName: 'breed-of-cats';
+    singularName: 'breed-of-cat';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    characteristics: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::characteristic.characteristic'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::breed-of-cat.breed-of-cat'
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    value: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+  };
+}
+
 export interface ApiBreedOfDogBreedOfDog extends Struct.CollectionTypeSchema {
   collectionName: 'breed_of_dogs';
   info: {
@@ -967,6 +1018,10 @@ export interface ApiCharacteristicCharacteristic
     approved_usages: Schema.Attribute.Relation<
       'manyToMany',
       'api::approved-usage.approved-usage'
+    >;
+    breed_of_cats: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::breed-of-cat.breed-of-cat'
     >;
     breed_of_dogs: Schema.Attribute.Relation<
       'manyToMany',
@@ -2544,6 +2599,7 @@ declare module '@strapi/strapi' {
       'api::approved-usage.approved-usage': ApiApprovedUsageApprovedUsage;
       'api::brand-for-animal.brand-for-animal': ApiBrandForAnimalBrandForAnimal;
       'api::brand.brand': ApiBrandBrand;
+      'api::breed-of-cat.breed-of-cat': ApiBreedOfCatBreedOfCat;
       'api::breed-of-dog.breed-of-dog': ApiBreedOfDogBreedOfDog;
       'api::breed-size.breed-size': ApiBreedSizeBreedSize;
       'api::catalog.catalog': ApiCatalogCatalog;

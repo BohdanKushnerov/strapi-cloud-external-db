@@ -1,0 +1,45 @@
+{
+  "kind": "collectionType",
+  "collectionName": "breed_of_cats",
+  "info": {
+    "singularName": "breed-of-cat",
+    "pluralName": "breed-of-cats",
+    "displayName": "BreedOfCat"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "value": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "required": true,
+      "unique": true
+    },
+    "characteristics": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::characteristic.characteristic",
+      "inversedBy": "breed_of_cats"
+    },
+    "title": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "required": true,
+      "unique": true
+    }
+  }
+}

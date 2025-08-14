@@ -144,6 +144,12 @@
             "relation": "manyToMany",
             "target": "api::type-of-cat-food.type-of-cat-food",
             "mappedBy": "characteristics"
+        },
+        "breed_of_cats": {
+            "type": "relation",
+            "relation": "manyToMany",
+            "target": "api::breed-of-cat.breed-of-cat",
+            "mappedBy": "characteristics"
         }
     }
 }
