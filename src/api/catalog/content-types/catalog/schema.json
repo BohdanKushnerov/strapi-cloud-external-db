@@ -23,12 +23,22 @@
       "mappedBy": "animal"
     },
     "animal": {
+      "type": "string",
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       },
+      "required": true,
+      "unique": true
+    },
+    "value": {
       "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "required": true,
       "unique": true
     }
