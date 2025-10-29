@@ -20,6 +20,15 @@ const FILTER_CONFIG = {
         titleField: "title",
         throughCharacteristics: true,
     },
+    form_of_feed_release: {
+        table: "form_of_feed_releases",
+        alias: 'ffr',
+        linkTable: "characteristics_form_of_feed_release_lnk",
+        linkField: "form_of_feed_release_id",
+        valueField: "value",
+        titleField: "title",
+        throughCharacteristics: true,
+    },
     age_of_dogs: {
         table: "age_of_dogs",
         linkTable: "age_of_dogs_characteristics_lnk",
@@ -335,7 +344,7 @@ class FacetQueryBuilder {
     }
     buildConfigurableQueries() {
         return Object.entries(FILTER_CONFIG).map(([filterKey, config]) => {
-            const alias = config.table.substring(0, 3); // Short table alias
+            const alias = config.alias ? config.alias : config.table.substring(0, 3); // Short table alias
             if (config.throughCharacteristics) {
                 return `
           SELECT 
