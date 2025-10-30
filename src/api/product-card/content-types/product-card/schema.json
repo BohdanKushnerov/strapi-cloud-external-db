@@ -105,9 +105,9 @@
       "required": true,
       "default": false
     },
-    "animal_sub_category": {
+    "animal_sub_categories": {
       "type": "relation",
-      "relation": "manyToOne",
+      "relation": "manyToMany",
       "target": "api::animal-sub-category.animal-sub-category",
       "inversedBy": "product_cards"
     },

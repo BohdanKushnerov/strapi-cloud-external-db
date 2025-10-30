@@ -17,12 +17,12 @@
   },
   "attributes": {
     "subcategory": {
+      "type": "string",
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       },
-      "type": "string",
       "required": true,
       "unique": true
     },
@@ -33,12 +33,12 @@
       "inversedBy": "animal_sub_categories"
     },
     "href": {
+      "type": "string",
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       },
-      "type": "string",
       "required": true,
       "unique": true
     },
@@ -50,9 +50,9 @@
     },
     "product_cards": {
       "type": "relation",
-      "relation": "oneToMany",
+      "relation": "manyToMany",
       "target": "api::product-card.product-card",
-      "mappedBy": "animal_sub_category"
+      "mappedBy": "animal_sub_categories"
     }
   }
 }

@@ -22,7 +22,7 @@ const FILTER_CONFIG = {
     },
     form_of_feed_release: {
         table: "form_of_feed_releases",
-        alias: 'ffr',
+        alias: "ffr",
         linkTable: "characteristics_form_of_feed_release_lnk",
         linkField: "form_of_feed_release_id",
         valueField: "value",
@@ -185,7 +185,7 @@ class FilterBuilder {
                 this.whereClauses.push(`
           EXISTS (
             SELECT 1
-            FROM product_cards_animal_sub_category_lnk psc
+            FROM product_cards_animal_sub_categories_lnk psc
             JOIN animal_sub_categories subcat ON subcat.id = psc.animal_sub_category_id
             WHERE psc.product_card_id = pc.id AND subcat.href = ?
           )
@@ -196,7 +196,7 @@ class FilterBuilder {
                 this.whereClauses.push(`
           EXISTS (
             SELECT 1
-            FROM product_cards_animal_sub_category_lnk psc
+            FROM product_cards_animal_sub_categories_lnk psc
             WHERE psc.product_card_id = pc.id
           )
         `);
@@ -382,7 +382,7 @@ class FacetQueryBuilder {
         FROM product_cards pc
         JOIN product_cards_characteristic_lnk cclnk ON cclnk.product_card_id = pc.id
         JOIN characteristics c ON c.id = cclnk.characteristic_id
-        JOIN product_cards_animal_sub_category_lnk psc ON psc.product_card_id = pc.id
+        JOIN product_cards_animal_sub_categories_lnk psc ON psc.product_card_id = pc.id
         JOIN animal_sub_categories subcat ON subcat.id = psc.animal_sub_category_id AND subcat.href = ?
         WHERE pc.published_at IS NOT NULL
         ${this.baseWhereSQL ? "AND " + this.baseWhereSQL : ""}
@@ -418,12 +418,36 @@ const buildPaginationQueries = (whereSQL, sortSQL) => {
       pc.top_seller,
       pc.published_at,
 
-      json_build_object(
-        'document_id', ascat.document_id,
-        'subcategory', ascat.subcategory,
-        'href', ascat.href
+      -- Подкатегория: если передан href — берём её, иначе любую первую
+      COALESCE(
+        (
+          SELECT json_build_object(
+            'document_id', subcat.document_id,
+            'subcategory', subcat.subcategory,
+            'href', subcat.href
+          )
+          FROM animal_sub_categories subcat
+          JOIN product_cards_animal_sub_categories_lnk lnk
+            ON lnk.animal_sub_category_id = subcat.id
+          WHERE lnk.product_card_id = pc.id
+            AND subcat.href = ?
+          LIMIT 1
+        ),
+        (
+          SELECT json_build_object(
+            'document_id', subcat.document_id,
+            'subcategory', subcat.subcategory,
+            'href', subcat.href
+          )
+          FROM animal_sub_categories subcat
+          JOIN product_cards_animal_sub_categories_lnk lnk
+            ON lnk.animal_sub_category_id = subcat.id
+          WHERE lnk.product_card_id = pc.id
+          LIMIT 1
+        )
       ) AS animal_sub_category,
 
+      -- Подкарточки
       (
         SELECT json_agg(sc ORDER BY sc."inStock" DESC, sc."size" ASC)
         FROM (
@@ -436,17 +460,22 @@ const buildPaginationQueries = (whereSQL, sortSQL) => {
             ps2.old_price AS "oldPrice",
             ps2.in_stock AS "inStock"
           FROM product_sub_cards ps2
-          JOIN product_sub_cards_product_card_lnk lnk2 ON lnk2.product_sub_card_id = ps2.id
+          JOIN product_sub_cards_product_card_lnk lnk2
+            ON lnk2.product_sub_card_id = ps2.id
           WHERE lnk2.product_card_id = pc.id
         ) sc
       ) AS product_sub_cards,
 
+      -- Изображения
       (
-        SELECT json_agg(json_build_object(
-          'url', f.url,
-          'height', f.height,
-          'width', f.width
-        ) ORDER BY frm."order" ASC)
+        SELECT json_agg(
+          json_build_object(
+            'url', f.url,
+            'height', f.height,
+            'width', f.width
+          )
+          ORDER BY frm."order" ASC
+        )
         FROM files_related_mph frm
         JOIN files f ON f.id = frm.file_id
         WHERE frm.related_id = pc.id
@@ -456,11 +485,10 @@ const buildPaginationQueries = (whereSQL, sortSQL) => {
 
     FROM product_cards pc
 
-    LEFT JOIN product_cards_animal_sub_category_lnk lnk_cat ON lnk_cat.product_card_id = pc.id
-    LEFT JOIN animal_sub_categories ascat ON ascat.id = lnk_cat.animal_sub_category_id
-
-    LEFT JOIN product_sub_cards_product_card_lnk lnk ON lnk.product_card_id = pc.id
-    LEFT JOIN product_sub_cards ps ON ps.id = lnk.product_sub_card_id
+    LEFT JOIN product_sub_cards_product_card_lnk lnk
+      ON lnk.product_card_id = pc.id
+    LEFT JOIN product_sub_cards ps
+      ON ps.id = lnk.product_sub_card_id
 
     WHERE pc.published_at IS NOT NULL
       ${whereClause}
@@ -475,20 +503,19 @@ const buildPaginationQueries = (whereSQL, sortSQL) => {
       pc.product_url,
       pc.eco,
       pc.top_seller,
-      pc.published_at,
-      ascat.document_id,
-      ascat.subcategory,
-      ascat.href
+      pc.published_at
 
     ORDER BY ${sortSQL}
     OFFSET ?
     LIMIT ?
   `;
     const countQuery = `
-    SELECT COUNT(DISTINCT pc.id) as total
+    SELECT COUNT(DISTINCT pc.id) AS total
     FROM product_cards pc
-    LEFT JOIN product_sub_cards_product_card_lnk lnk ON lnk.product_card_id = pc.id
-    LEFT JOIN product_sub_cards ps ON ps.id = lnk.product_sub_card_id
+    LEFT JOIN product_sub_cards_product_card_lnk lnk
+      ON lnk.product_card_id = pc.id
+    LEFT JOIN product_sub_cards ps
+      ON ps.id = lnk.product_sub_card_id
     WHERE pc.published_at IS NOT NULL
       AND ps.in_stock = true
       ${whereClause}
@@ -534,6 +561,8 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
             const limit = Number(pageSize);
             const sortSQL = SORT_MAP[sort] || SORT_MAP.popular;
             const parsedFilters = parseFilters(filter);
+            console.log("parsedFilters", parsedFilters);
+            console.log("categoryHref", categoryHref);
             const filterBuilder = new FilterBuilder(parsedFilters);
             filterBuilder.addSubCategoryFilter(categoryHref);
             filterBuilder.addCountryFilter();
@@ -543,7 +572,7 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
             const filterParams = filterBuilder.getParams();
             const queries = buildPaginationQueries(whereSQL, sortSQL);
             // Prepare all parameters in the correct order
-            const dataParams = [...filterParams, offset, limit];
+            const dataParams = [categoryHref, ...filterParams, offset, limit];
             const countParams = [...filterParams];
             const categoryParams = categoryHref ? [categoryHref] : [];
             // Execute queries
