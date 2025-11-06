@@ -16,6 +16,14 @@ interface FilterConfig {
   throughCharacteristics?: boolean;
 }
 
+type AnimalType = "cats" | "dogs" | "other";
+
+const detectAnimalType = (href: string): AnimalType => {
+  if (href.includes("cats")) return "cats";
+  if (href.includes("dogs")) return "dogs";
+  return "other";
+};
+
 const FILTER_CONFIG: Record<string, FilterConfig> = {
   brand: {
     table: "brands",
@@ -312,7 +320,8 @@ class FilterBuilder {
 class FacetQueryBuilder {
   constructor(
     private baseWhereSQL: string,
-    private baseParams: any[]
+    private baseParams: any[],
+    private animalType: AnimalType
   ) {}
 
   buildFacetQueries(): string {
@@ -380,11 +389,23 @@ class FacetQueryBuilder {
   }
 
   private buildConfigurableQueries(): string[] {
-    return Object.entries(FILTER_CONFIG).map(([filterKey, config]) => {
-      const alias = config.alias ? config.alias : config.table.substring(0, 3); // Short table alias
+    return Object.entries(FILTER_CONFIG)
+      .filter(([filterKey]) => {
+        if (this.animalType === "cats") {
+          return !filterKey.includes("dogs");
+        }
 
-      if (config.throughCharacteristics) {
-        return `
+        if (this.animalType === "dogs") {
+          return !filterKey.includes("cats");
+        }
+
+        return true;
+      })
+      .map(([filterKey, config]) => {
+        const alias = config.alias ?? config.table.substring(0, 3);
+
+        if (config.throughCharacteristics) {
+          return `
           SELECT 
             ${alias}.${config.titleField} AS title,
             ${alias}.${config.valueField} AS value,
@@ -397,20 +418,20 @@ class FacetQueryBuilder {
           JOIN ${config.table} ${alias} ON ${alias}.id = lnk.${config.linkField}
           GROUP BY ${alias}.${config.titleField}, ${alias}.${config.valueField}
         `;
-      } else {
+        }
+
         return `
-          SELECT 
-            ${alias}.${config.titleField} AS title,
-            ${alias}.${config.valueField} AS value,
-            COUNT(fp.id) AS count,
-            '${filterKey}' AS group_by_type
-          FROM filtered_products fp
-          JOIN ${config.linkTable} lnk ON lnk.product_card_id = fp.id
-          JOIN ${config.table} ${alias} ON ${alias}.id = lnk.${config.linkField}
-          GROUP BY ${alias}.${config.titleField}, ${alias}.${config.valueField}
-        `;
-      }
-    });
+        SELECT 
+          ${alias}.${config.titleField} AS title,
+          ${alias}.${config.valueField} AS value,
+          COUNT(fp.id) AS count,
+          '${filterKey}' AS group_by_type
+        FROM filtered_products fp
+        JOIN ${config.linkTable} lnk ON lnk.product_card_id = fp.id
+        JOIN ${config.table} ${alias} ON ${alias}.id = lnk.${config.linkField}
+        GROUP BY ${alias}.${config.titleField}, ${alias}.${config.valueField}
+      `;
+      });
   }
 
   buildFullQuery(subCategory: string): string {
@@ -594,7 +615,12 @@ export default factories.createCoreController(
         const { whereSQL, params } = filterBuilder.build();
         const queryParams = [subCategory, ...params];
 
-        const facetBuilder = new FacetQueryBuilder(whereSQL, queryParams);
+        const animalType = detectAnimalType(subCategory as string);
+        const facetBuilder = new FacetQueryBuilder(
+          whereSQL,
+          queryParams,
+          animalType
+        );
         const query = facetBuilder.buildFullQuery(subCategory as string);
 
         const result = await strapi.db.connection.raw(query, queryParams);

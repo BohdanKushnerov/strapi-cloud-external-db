@@ -4,6 +4,13 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 const strapi_1 = require("@strapi/strapi");
+const detectAnimalType = (href) => {
+    if (href.includes("cats"))
+        return "cats";
+    if (href.includes("dogs"))
+        return "dogs";
+    return "other";
+};
 const FILTER_CONFIG = {
     brand: {
         table: "brands",
@@ -279,9 +286,10 @@ class FilterBuilder {
     }
 }
 class FacetQueryBuilder {
-    constructor(baseWhereSQL, baseParams) {
+    constructor(baseWhereSQL, baseParams, animalType) {
         this.baseWhereSQL = baseWhereSQL;
         this.baseParams = baseParams;
+        this.animalType = animalType;
     }
     buildFacetQueries() {
         const queries = [
@@ -343,8 +351,19 @@ class FacetQueryBuilder {
     `;
     }
     buildConfigurableQueries() {
-        return Object.entries(FILTER_CONFIG).map(([filterKey, config]) => {
-            const alias = config.alias ? config.alias : config.table.substring(0, 3); // Short table alias
+        return Object.entries(FILTER_CONFIG)
+            .filter(([filterKey]) => {
+            if (this.animalType === "cats") {
+                return !filterKey.includes("dogs");
+            }
+            if (this.animalType === "dogs") {
+                return !filterKey.includes("cats");
+            }
+            return true;
+        })
+            .map(([filterKey, config]) => {
+            var _a;
+            const alias = (_a = config.alias) !== null && _a !== void 0 ? _a : config.table.substring(0, 3);
             if (config.throughCharacteristics) {
                 return `
           SELECT 
@@ -360,19 +379,17 @@ class FacetQueryBuilder {
           GROUP BY ${alias}.${config.titleField}, ${alias}.${config.valueField}
         `;
             }
-            else {
-                return `
-          SELECT 
-            ${alias}.${config.titleField} AS title,
-            ${alias}.${config.valueField} AS value,
-            COUNT(fp.id) AS count,
-            '${filterKey}' AS group_by_type
-          FROM filtered_products fp
-          JOIN ${config.linkTable} lnk ON lnk.product_card_id = fp.id
-          JOIN ${config.table} ${alias} ON ${alias}.id = lnk.${config.linkField}
-          GROUP BY ${alias}.${config.titleField}, ${alias}.${config.valueField}
-        `;
-            }
+            return `
+        SELECT 
+          ${alias}.${config.titleField} AS title,
+          ${alias}.${config.valueField} AS value,
+          COUNT(fp.id) AS count,
+          '${filterKey}' AS group_by_type
+        FROM filtered_products fp
+        JOIN ${config.linkTable} lnk ON lnk.product_card_id = fp.id
+        JOIN ${config.table} ${alias} ON ${alias}.id = lnk.${config.linkField}
+        GROUP BY ${alias}.${config.titleField}, ${alias}.${config.valueField}
+      `;
         });
     }
     buildFullQuery(subCategory) {
@@ -542,7 +559,8 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
             filterBuilder.addConfigurableFilters();
             const { whereSQL, params } = filterBuilder.build();
             const queryParams = [subCategory, ...params];
-            const facetBuilder = new FacetQueryBuilder(whereSQL, queryParams);
+            const animalType = detectAnimalType(subCategory);
+            const facetBuilder = new FacetQueryBuilder(whereSQL, queryParams, animalType);
             const query = facetBuilder.buildFullQuery(subCategory);
             const result = await strapi.db.connection.raw(query, queryParams);
             ctx.body = result.rows;
@@ -561,8 +579,6 @@ exports.default = strapi_1.factories.createCoreController("api::product-card.pro
             const limit = Number(pageSize);
             const sortSQL = SORT_MAP[sort] || SORT_MAP.popular;
             const parsedFilters = parseFilters(filter);
-            console.log("parsedFilters", parsedFilters);
-            console.log("categoryHref", categoryHref);
             const filterBuilder = new FilterBuilder(parsedFilters);
             filterBuilder.addSubCategoryFilter(categoryHref);
             filterBuilder.addCountryFilter();
