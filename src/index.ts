@@ -1,5 +1,6 @@
-// import type { Core } from '@strapi/strapi';
+import { Core } from "@strapi/strapi";
 
+// import type { Core } from '@strapi/strapi';
 export default {
   /**
    * An asynchronous register function that runs before
@@ -7,7 +8,18 @@ export default {
    *
    * This gives you an opportunity to extend code.
    */
-  register(/* { strapi }: { strapi: Core.Strapi } */) {},
+  register({ strapi }: { strapi: Core.Strapi }) {
+    console.log("✅ Backend register started");
+
+    // Регистрируем кастомное поле в бэкенде
+    strapi.customFields.register({
+      name: "characteristic-filter",
+      plugin: "global",
+      type: "json",
+    });
+
+    strapi.log.info("✅ Characteristic filter registered on backend");
+  },
 
   /**
    * An asynchronous bootstrap function that runs before
@@ -31,7 +43,7 @@ export default {
 
     strapi.db.lifecycles.subscribe(async (event) => {
       if (
-        (event.action === "beforeUpdate" || event.action === 'beforeCreate') &&
+        (event.action === "beforeUpdate" || event.action === "beforeCreate") &&
         event.model.uid === "api::product-sub-card.product-sub-card" &&
         event.params.data.inStock === false
       ) {
