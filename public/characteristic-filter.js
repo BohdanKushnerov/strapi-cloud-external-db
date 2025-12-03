@@ -1,3 +1,5 @@
+import { HREF_CONFIG } from "./hrefConfig";
+
 (function () {
   let currentUrl = window.location.pathname;
   let titleObserver = null;
@@ -42,10 +44,8 @@
       if (data.data && data.data.length > 0) {
         const subCategory = data.data[0];
         console.log("✅ Find!");
+        console.log("data.data", data.data);
         console.log("SubCategory:", subCategory.subcategory);
-        // console.log("href:", subCategory.href);
-        // console.log("ID:", subCategory.documentId);
-        // console.log("Category:", subCategory.animal_category?.category);
         return subCategory.href;
       } else {
         console.log("❌ SubCategory not found");
@@ -58,34 +58,7 @@
   }
 
   const getCharacteristicsArrayByHrefSubCategory = (href) => {
-    const defaultLabels = [
-      "titleOfProductCard",
-      "product_card",
-      "breed_sizes",
-      "age_of_dogs",
-      "class_of_feed",
-      "special_dietary_needs",
-      "source_of_protein_in_feeds",
-      "form_of_feed_release",
-      "breed_of_dogs",
-    ];
-
-    const hrefConfig = {
-      "dry-food-for-dogs": defaultLabels,
-      "flea-and-tick-remedies-dogs": [
-        "titleOfProductCard",
-        "product_card",
-        "age_of_dogs",
-        "release_form",
-        "parasite_protection_types",
-        "main_active_ingredients",
-        "type_of_parasite",
-        "approved_usages",
-        "type_of_application",
-      ],
-    };
-
-    return hrefConfig[href];
+    return HREF_CONFIG[href];
   };
 
   const hideDivsByLabels = (labelsArray) => {
