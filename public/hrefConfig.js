@@ -84,4 +84,14 @@ export const HREF_CONFIG = {
     "type_of_cat_foods",
     "type_of_packaging",
   ],
+  "therapeutic-food-for-cats": [
+    "titleOfProductCard",
+    "product_card",
+    "age_of_cats",
+    "appointment_of_veterinary_diets",
+    "class_of_feed",
+    "form_of_feed_release",
+    "source_of_protein_in_feeds",
+    "special_dietary_needs",
+  ],
 };

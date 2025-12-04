@@ -1,6 +1,6 @@
-import { HREF_CONFIG } from "./hrefConfig";
+(async function () {
+  const { HREF_CONFIG } = await import("./hrefConfig.js");
 
-(function () {
   let currentUrl = window.location.pathname;
   let titleObserver = null;
   let isFiltering = false;
